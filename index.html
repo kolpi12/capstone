@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <base href="http://localhost:8000/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>서울시 유동인구 지도</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/map.css">
+    <script src="script/d3/d3.min.js"></script>
+    <script src="script/topojson/topojson.min.js"></script>
+    <script src="script/map.js"></script>
 </head>
-<body>
-    
+<body onload="map_init('#main_map', 'json/3_EMD.json', '3_EMD')">
+    <div id="main_map"></div>
 </body>
 </html>
