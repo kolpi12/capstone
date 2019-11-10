@@ -1,4 +1,12 @@
-#map {
+#map path {
     fill: white;
     stroke: black;
+}
+
+#map path:hover {
+    fill: orange;
+}
+
+#tooltip {
+    fill: black;
 }

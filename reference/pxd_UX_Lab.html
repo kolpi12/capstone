@@ -1,0 +1,1082 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="seoul_icon.png" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+
+    <style>
+    body{
+        font-family:helvetica,나눔바른고딕;
+    }
+    
+        h1{
+            font-weight:100;
+            margin-left:200px;
+        }
+    #chart { background-color: #fff;position:relative; }
+    #chart2 {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+}
+
+    #tooltip{
+        position: absolute;
+        font-size: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 3px 5px; 
+        color: #fff;
+        text-align: right;
+        border-radius: 2px;
+        height: 30px;
+        min-width: 40px;
+        box-sizing: border-box;
+    }
+
+    #tooltip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.7);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+        left: 0px;
+        bottom: -8px;
+    }
+
+    .dim{
+        opacity:0.6;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    #places text{
+        pointer-events: none;
+    }
+
+    rect.bordered {
+        stroke: white;
+        stroke-width:1px;   
+      }
+
+    #detail { position:absolute; right:20px;top:20px;}
+    svg .gu { fill: rgb(250, 253, 207); stroke:rgba(0,0,0,0.2);
+        transition: fill .5s ease;}
+    svg .municipality { fill: #aaa; stroke:rgba(0,0,0,0.1);
+        transition: fill .5s ease;}
+    svg .municipality:hover { stroke: rgba(0,0,0,0.6);stroke-width: 1.5px;  }
+    svg .municipality.select { stroke: rgba(0,0,0,0.7);stroke-width: 2px;  }
+    svg .municipality.p0 { fill: rgb(247,251,255); }
+    svg .municipality.p1 { fill: rgb(222,235,247); }
+    svg .municipality.p2 { fill: rgb(198,219,239); }
+    svg .municipality.p3 { fill: rgb(158,202,225); }
+    svg .municipality.p4 { fill: rgb(107,174,214); }
+    svg .municipality.p5 { fill: rgb(66,146,198); }
+    svg .municipality.p6 { fill: rgb(33,113,181); }
+    svg .municipality.p7 { fill: rgb(8,81,156); }
+    svg .municipality.p8 { fill: rgb(8,48,107); }
+    svg text { font-size: 10px;fill:RGB(74, 83, 97);user-select: none;  }
+
+    .axis line{
+  stroke: RGBA(74, 83, 97,0.4);
+}
+
+.axis path{
+  stroke: RGBA(74, 83, 97,0.2);
+}
+
+.axis text{
+  fill: RGB(74, 83, 97);
+}  
+
+.area.m {
+fill: RGB(29, 161, 242,0.2);
+stroke: RGB(29, 161, 242);
+stroke-width: 1px;
+}
+.area.f {
+fill: RGB(203, 80, 74,0.15);
+stroke: RGB(203, 80, 74);
+stroke-width: 1px;
+}
+
+#slider2 g.tick text {
+    display: none;
+}
+
+#desc_title {
+    position: absolute;
+    left: 20px;
+    top: -45px;
+    width: 200px;
+    color: RGB(74, 83, 97);
+    font-size: 15pt;
+
+}
+
+#time_guide{
+    transition: x .2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    stroke: #00000094;
+    z-index:1000;
+}
+.notransition{
+    transition:none;
+}
+
+    #time{
+        color: RGBA(78, 82, 84,0.5);
+        font-size: 30pt;
+        opacity: 0.9;
+        position: absolute;
+        top: -20px;
+        left: 20px;
+        font-weight: 100;
+    }
+
+    #desc_pop{
+        color: RGBA(78, 82, 84,0.5);
+        font-size: 10pt;
+        opacity: 0.4;
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        font-weight: 100;
+    }
+
+
+    #slider2{
+        position:absolute;
+        top:235px;
+        top:485px;
+        left:5px;
+    }
+
+    #footer{
+        font-size: 10pt;
+    position: fixed;
+    left: 200px;
+    bottom: 20px;
+    }
+    
+    #close_button{
+        display:none;
+        position: absolute;
+        
+    top: 100px;
+    left:700px;
+    border: 1px solid RGB(70, 153, 204);
+    padding: 10px;
+    background: white;
+    cursor: pointer;
+    }
+#origin_select{
+    fill: rgba(0,0,0,0.1);
+    stroke: rgba(0,0,0,0.2);
+    stroke-width: 1.5px;
+}
+.handle:focus {
+    outline: none;
+}
+
+#filter_legend{
+    position: absolute;
+    top: 195px;
+    left: 30px;
+    transform: scale(0.78);
+    font-size: 18px;
+}
+.fa-female {
+    color: RGB(203, 80, 74,0.6);
+    position: absolute;
+    top: 0px;
+}
+.fa-male {
+    color: RGB(29, 161, 242,0.6);
+    position: absolute;
+    top: 26px;
+    left: 1px;
+}
+
+#filter{
+    position: absolute;
+    top: 195px;
+    left: 45px;
+    transform: scale(0.78);
+}
+#filter .box{
+    width:20px;
+    height:20px;
+    position:absolute;
+    background:RGBa(29, 161, 242,0.2);
+    border:1px solid RGB(29, 161, 242,0.6);
+    font-size:10px;
+    text-align: center;
+    line-height: 18px;
+    color: rgb(0,0,0,0.6);
+    cursor: pointer;
+    user-select: none; 
+    opacity: 0.2;
+}
+#filter .box.f{
+    background:RGB(203, 80, 74,0.15);
+    border:1px solid RGB(203, 80, 74,0.6);
+
+}
+
+#filter .box.selected{
+    opacity: 1;
+}
+
+    </style>
+  </head>
+  <body>
+<h1>서울시 생활인구</h1>
+    <div id="chart">
+        
+        <div id="chart2">
+            <div id=filter_legend><i class="fas fa-female"></i><br><i class="fas fa-male"></i></div>
+            <div id=filter></div>
+            <div id="slider2"></div>
+            <div id="time"></div>
+        </div>
+    </div>
+    
+    <div id=close_button onclick=close_originmap()>닫기</div>
+    <div id=footer>designed by @taekie</div>
+    
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<script src="https://unpkg.com/d3-simple-slider"></script>
+
+
+    <script>
+    var width = 960,
+        height = 500;
+
+    var minColor = '#921B51',
+        maxColor = '#FEE0A5' ;
+    var minValue = -50000,
+        maxValue = 50000; // TODO: automate
+    var legendWidth = 15,
+        legendHeight = 150,
+        margin = { left: 50, top: 200 };
+        
+
+    // define color scale
+   
+   /*
+    var colorScale = d3.scale.linear()
+        .range([minColor, maxColor]) // or use hex values
+        .domain([minValue, maxValue]);
+*/
+    var myScale=d3.scaleLinear()
+                .range([0,1]) //
+                .domain([minValue, maxValue]);
+
+    function colorScale(val){
+        return d3.interpolateRdYlBu(1-val);
+        //if(val>0) return d3.interpolateYlOrRd(val);
+        //else return d3.interpolateGnBu(-val);
+    }
+
+
+    var svg = d3.select("#chart").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+
+    var map = svg.append("g").attr("id", "map"),
+    map2 = svg.append("g").attr("id", "map2"),
+    points = svg.append("g").attr("id", "places"),
+    legend = svg.append("g").attr("id", "legend");
+
+    var desc=points.append("text").attr("id","desc");
+    var desc_title=d3.select("#chart2").append("div").attr("id","desc_title");
+    var desc_pop=d3.select("#chart2").append("div").attr("id","desc_pop");
+
+   
+    var svg2 = d3.select("#chart2").append("svg")
+        .attr("width", 380)
+        .attr("height", 550);
+    
+
+    var detail = svg2.append("g").attr("id", "detail").attr("transform", 
+      "translate(25,20)"
+   );
+   var heatmap = svg2.append("g").attr("id", "heatmap").attr("transform", 
+      "translate(25,280)"
+   );
+   
+   var x = d3.scaleLinear().range([0,300]).domain([ 0, 80]);
+
+    detail.append("g")
+        .attr("transform", "translate(0,150)")
+        .attr("class","axis")
+        .call(d3.axisBottom(x))
+    
+        d3.selectAll(".axis path").attr("stroke","")
+        d3.selectAll(".axis line").attr("stroke","")
+    
+    
+make_legend(-5,5);
+
+function make_legend(min,max){
+    legend.html("");
+// add legend for colors
+var legendBar = legend.append("defs").append("linearGradient")
+      .attr("id", "gradient")
+      .attr("x1", "100%")
+      .attr("y1", "0%")
+      .attr("x2", "100%")
+      .attr("y2", "100%")
+      .attr("spreadMethod", "pad");
+
+for(var i=0;i<=10;i++){
+    var color=colorScale(1-i/10);
+    if(min==0) color=d3.interpolateYlGnBu(1-i/10);
+
+    legendBar.append("stop")
+      .attr("offset", i*10+"%")
+      .attr("stop-color",color )
+      .attr("stop-opacity", 1);
+}
+  
+
+  legend.append("rect")
+      .attr("width", legendWidth)
+      .attr("height", legendHeight)
+      .style("fill", "url(#gradient)")
+      //.style("opacity", 0.5)
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var y = d3.scaleLinear().range([legendHeight, 0]).domain([ min, max]);
+  var yAxis = d3.axisRight(y);
+
+  legend.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + (legendWidth + margin.left) + "," + margin.top + ")")
+      .call(yAxis)
+    .append("text")
+      //.attr("transform", "rotate(-90)")
+      .attr("x", 30)
+      .attr("dx", "0em")
+      .attr("y", -15)
+      .style("text-anchor", "end")
+      .text("(만명)");
+}
+
+
+    var projection = d3.geoMercator()
+    .center([126.9895, 37.5651])
+      .scale(80000)
+        .translate([width/2, height/2]);
+
+    var path = d3.geoPath()
+        .projection(projection);
+
+    var quantize = d3.scaleQuantize()
+        .domain([0, 1000])
+        .range(d3.range(9).map(function(i) { return "p" + i; }));
+
+    var popByName = d3.map();
+    var popTimeLoc=[];
+    var popbase=d3.map();
+    var filtertable=[];
+
+    var popData;
+
+      // add map
+    queue()
+    .defer(d3.json,"seoul_topo_simple.json")
+    .defer(d3.json,"seoul_municipalities_topo_simple.json")
+    .defer(d3.csv,"seoul_pop_lean.csv")
+    //.defer(d3.csv,"seoul_pop_test.csv")
+    //.defer(d3.tsv,"0902sat.tsv")
+    .await(ready);
+
+    function ready(error,data,data2,d){
+        var features = topojson.feature(data, data.objects.seoul_geo).features;
+        map.selectAll('path')
+            .data(features)
+            .enter().append('path')
+            .attr('class', function(d) { return 'municipality '+d.properties.adm_nm;})
+            .attr('id',function(d) { return 'c' + d.properties.adm_cd2 })
+            .attr('code',function(d) { return d.properties.adm_cd2 })
+            .attr('d', path)
+            .on("mouseenter",function(d) { show_detail(this); })
+            .on("dblclick",function(d) { where_from(this); })
+            
+            .on("click",function(d) { d3.selectAll(".municipality").attr('class',"municipality");d3.select("[code='"+d.properties.adm_cd2+"']").attr('class',"municipality select");show_detail(this);age_hour_heatmap(this); })
+            .attr("name",function(d) { var name=d.properties.adm_nm;
+            name=name.replace(/서울특별시 /,""); return name; })
+            .on("mouseleave",function(d){ show_detail(); })
+        
+            //.attr('area',function(d) { return d.properties.SHAPE_AREA })         
+            
+
+
+        
+        var h=0;
+        popData=d;
+        maxValue=d3.max(popData.map(function(d){return d.population;}))
+        //show_map(popData,22);
+        
+        popData.map(function(d){if(d.hour==3) popbase.set("c"+d.dong_code,+d.population);} );
+        console.log(popbase);
+        slider2.value(13);
+
+        //구 경계 지도
+        var features = topojson.feature(data2, data2.objects.seoul_municipalities_geo).features;
+        map2.selectAll('path')
+            .data(features)
+        .enter().append('path')
+            .attr('class', function(d) { return 'gu '+d.properties.SIG_ENG_NM;})
+            .attr('id',function(d) { return "g"+d.properties.SIG_CD })
+            .attr('d', path)
+            .attr('name',function(d) { return d.properties.SIG_KOR_NM; })
+            
+
+        map2.selectAll('text')
+            .data(features)
+        .enter().append("text")
+            .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .attr("dx", "-2em")
+            .attr("class", "municipality-label")
+
+            .text(function(d) { var name=d.properties.SIG_KOR_NM; return name; })
+
+        map2.attr("transform","translate(0,-500)");
+
+        /*
+        var t = d3.timer(function(elapsed) {
+            show_map(d,h);
+            h++;
+            if(h>23) h=0;
+        //if (h > 23) t.stop();
+        }, 10000);
+        */
+
+        for(var i=0;i<14;i++){
+            d3.select("#filter").append("div")
+            .attr("class","box m selected")
+            .attr("age",i)
+            .attr("order",i)
+            .attr("gender","m")
+            .style("left",i*24+"px")
+            .style("top","26px")
+            .text((i+1)*5)
+           // .on("click",function(){toggle_select(this)})
+            
+
+            d3.select("#filter").append("div")
+            .attr("class","box f selected")
+            .attr("age",i)
+            .attr("order",i+14)
+            .attr("gender","f")
+            .style("left",i*24+"px")
+            .style("top","0px")
+            .text((i+1)*5)
+            //.on("click",function(){toggle_select(this)})
+            
+
+        }
+        d3.selectAll("#filter .box[age='0']").text("10-");
+        d3.selectAll("#filter .box[age='13']").text("70+");
+        
+        var selection_start;
+        var filtercanvas=d3.select("#filter");
+        filtercanvas
+        .on( "mousedown", function() {
+            if( !d3.event.ctrlKey) {
+                d3.selectAll( '.box.selected').classed( "selected", false);
+            }
+            selection_start= d3.mouse( this);
+            filter_select(selection_start[0],selection_start[0],selection_start[1],selection_start[1])
+        })
+        .on( "mousemove", function() {
+            
+            if(!selection_start) return;
+            var p=d3.mouse( this);
+            var x1=Math.min(selection_start[0],p[0]);
+            var x2=Math.max(selection_start[0],p[0]);
+            var y1=Math.min(selection_start[1],p[1]);
+            var y2=Math.max(selection_start[1],p[1]);
+            filter_select(x1,x2,y1,y2);
+
+        })
+        .on( "mouseup", function() {
+            selection_start=false;
+            for(var i=0;i<28;i++){
+                filtertable[i]=d3.select("#filter .box[order='"+i+"']").classed("selected")
+            }
+            show_map(popData,slider2.value());
+        })
+        .on( "mouseout", function() {
+            
+        });
+
+        // Define the div for the tooltip
+        var tooltip = d3.select("#chart2").append("div")	
+            .attr("id", "tooltip")				
+            .style("opacity", 0);
+
+        $("#filter .box")
+        .on( "mouseover", function() {
+            var pop=$(this).attr("pop");
+            var base_pop=$(this).attr("base_pop");
+            var diff=pop-base_pop;
+            var gender=$(this).attr("gender");
+            var y = d3.scaleLinear().domain([0,20000]).range([150,0]);
+            var x = d3.scaleLinear().domain([0,80]).range([0, 300]);
+            format = d3.format(",");
+            var yy=y(pop)-20;
+            var xx=$(this).attr("age")*18+20+14;
+
+
+            var s=format(pop)+"<br>"+(diff>0?"+":"")+format(diff);
+            var hh=30;
+            
+               
+         
+            tooltip.style("opacity", 1).style("left",xx+"px").style("top",yy+"px").style("height",hh+"px").html(s);
+            console.log(s);
+            
+        })
+        
+        d3.select("#c1168051000").dispatch('click');
+        d3.select("#c1168051000").dispatch('click');
+        slider2.value(3);
+        slider2.value(13);
+        
+    }
+function filter_select(x1,x2,y1,y2){
+    var ratio=0.78;
+    x1=parseInt(x1/24/ratio);
+    x2=parseInt(x2/24/ratio);
+    y1=parseInt(y1/24/ratio);
+    y2=parseInt(y2/24/ratio);
+    //console.log(x1,x2,y1,y2);
+    d3.selectAll( '#filter .box').each( function( state_data, i) {
+        var obj=d3.select( this);
+        var x=parseInt(obj.attr("age"));
+        var y=obj.attr("gender")=="f"?0:1;
+        if(x>=x1 && x<=x2 && y>=y1 && y<=y2){
+            obj.classed("selected",true);
+        }else obj.classed("selected",false);
+    })
+}
+
+function toggle_select(obj,solo){
+    if(solo) d3.selectAll("#filter .box").classed("selected",false);
+    var selected=d3.select(obj).classed("selected");
+    d3.select(obj).classed("selected",!selected)
+
+    for(var i=0;i<28;i++){
+        filtertable[i]=d3.select("#filter .box[order='"+i+"']").classed("selected")
+    }
+    show_map(popData,slider2.value());
+
+}
+
+    function getBoundingBoxCenter (selection) {
+  // get the DOM element from a D3 selection
+  // you could also use "this" inside .each()
+  var element = selection.node();
+  // use the native SVG interface to get the bounding box
+  var bbox = element.getBBox();
+  // return the center of the bounding box
+  //return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
+  return [bbox.x + bbox.width/2, bbox.y];
+}
+
+
+var last_selected_obj;
+
+var gridSize = Math.floor(350 / 24),
+legendElementWidth = gridSize*2,
+buckets = 9,
+colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
+ages = ["0","", "10", "", "20", "", "30", "", "40", "", "50", "", "60", "", "70+", "" ],
+//times = ["12","", "", "3", "", "", "6", "", "", "9", "", "", "12", "", "", "3", "", "", "6", "", "", "9", "", ""];
+times = ["12","", "", "3", "", "", "6", "", "", "9", "", "", "12", "", "", "3", "", "", "6", "", "", "9", "", ""];        
+
+  var timeLabels = heatmap.append("g").selectAll(".timeLabel")
+        .data(times)
+        .enter().append("text")
+        .text(function(d) { return d; })
+        .attr("x", function(d, i) { return i * gridSize; })
+        .attr("y", 230)
+        .style("text-anchor", "middle")
+        .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+        .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
+
+    var agesLabels = heatmap.append("g").selectAll(".dayLabel")
+        .data(ages)
+        .enter().append("text")
+        .text(function (d) { return d; })
+        .attr("x", 0)
+        .attr("y", function (d, i) { return (14-i) * gridSize; })
+        .style("text-anchor", "end")
+        .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+        .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+
+        heatmap.append("g").attr("id","card");
+        heatmap.append("rect")
+            .attr("id","time_guide")
+              .attr("x", function(d) { return 0 * gridSize; })
+              .attr("y", function(d) { return 0 * gridSize; })
+              .attr("rx", 2)
+              .attr("ry", 2)
+              .attr("class", "guide")
+              .attr("width", gridSize)
+              .attr("height", gridSize*15)
+              .attr("fill", "none")
+
+var myScale2=d3.scaleLinear()
+                .range([0,1]) //
+                .domain([0, 15000]);
+
+var myScale_origin=d3.scaleLinear()
+                .range([0,1]) //
+                .domain([0, 15000]);
+
+var origin_data;
+
+function where_from(obj){
+    var code=d3.select(obj).attr("code");
+    var hour=Number(slider2.value());
+    console.log(code,hour)
+
+    map2.attr("transform","translate(0,0)");
+    map.attr("transform","translate(0,-500)");
+    d3.select("#close_button").style("display","block");
+
+    var d=d3.select("#c"+code).attr("d");
+
+    map2.selectAll("path").style("fill","rgb(250, 253, 207)");
+
+    map2.append("path")
+        .attr('class', "select")
+        .attr('id',"origin_select")
+        .attr("d",d)
+
+    d3.csv("http://searchredesign.com/seoul_map/do_sql.php?dong_code="+code, function(data){
+    //console.log(data);
+    origin_data=data;
+
+    show_origin_map(origin_data,hour);
+});
+
+    var url="http://lab.pxd.co.kr/seoul_map/?code="+code;
+    //window.open(url,"_blank");
+
+}
+
+function close_originmap(){
+    map2.attr("transform","translate(0,-500)");
+    map.attr("transform","translate(0,0)");
+    d3.select("#close_button").style("display","none");
+    map2.select("#origin_select").remove();
+}
+
+function age_hour_heatmap(obj){
+    var code=d3.select(obj).attr("code")
+
+    var heatdata=new Array();
+    var columns=popData.columns;
+    popData.map(function(d){
+        if(d.dong_code+"00"==code) {
+            var first_one=Math.round(d[columns[4]])+Math.round(d[columns[4+14]]);
+            heatdata.push({'age':0,'hour':+d.hour,'pop':first_one/2})
+            heatdata.push({'age':1,'hour':+d.hour,'pop':first_one/2})
+            for(var i=1;i<14;i++){
+                var m=Math.round(d[columns[i+4]]);
+                var f=Math.round(d[columns[i+4+14]]);
+                heatdata.push({'age':i+1,'hour':+d.hour,'pop':m+f});
+            }
+            
+        }
+    });
+
+    var cards = heatmap.select("g#card").selectAll(".hour")
+              .data(heatdata, function(d) {return d.age+':'+d.hour;});
+
+          cards.append("title");
+
+          cards.enter().append("rect")
+              .attr("x", function(d) { return (d.hour) * gridSize; })
+              .attr("y", function(d) { return (14-d.age) * gridSize; })
+              .attr("rx", 2)
+              .attr("ry", 2)
+              .attr("class", "hour bordered")
+              .attr("width", gridSize)
+              .attr("height", gridSize)
+              .style("fill", colors[0]);
+
+          cards.transition().duration(500)
+              .style("fill", function(d) { return d3.interpolateYlGnBu(myScale2(d.pop)); });
+
+          cards.select("title").text(function(d) { return d3.format(",")(d.pop); });
+    
+  
+        cards.exit().remove();
+}
+
+    function show_detail(obj){
+        d3.select("#tooltip").style("opacity", 0);
+
+        if(!obj) obj="#map .municipality.select";
+        var code=d3.select(obj).attr("code")
+        //var hour=d3.select(obj).attr("hour")
+        var hour=Number(slider2.value());
+
+        d3.select("#time_guide").attr("x", function(d) { return hour * gridSize; })
+
+        //console.log(d3.select(obj));
+        last_selected_obj=obj;
+
+        
+        var columns=popData.columns;
+        var d=popData.filter(function(d){return (Number(d.hour)==hour && d.dong_code+"00"==code);});
+        var d_base=popData.filter(function(d){return (Number(d.hour)==3 && d.dong_code+"00"==code);});
+        var name=d3.select(obj).attr("name");
+
+        // set the dimensions and margins of the graph
+        var margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+                // set the ranges
+        var x = d3.scaleLinear().domain([0,80]).range([0, 300]);
+        var y = d3.scaleLinear().domain([0,20000]).range([150,0]);
+
+
+        desc.html(name)
+        .attr("transform","translate(" + getBoundingBoxCenter(d3.select(obj)) + ")").attr("dx",-name.length/2*0.8+"em").attr("dy","-0.5em");
+        //console.log(d3.select(obj))
+        desc_title.html(name);
+        //detail.selectAll("path").remove();
+
+
+
+
+        var m=new Array();
+        var f=new Array();
+        var m2=new Array();
+        var f2=new Array();
+        var m_all=new Array();
+        var f_all=new Array();
+        for(var i=0;i<14;i++){
+            var m_pop=Math.round(d[0][columns[i+4]]);
+            var f_pop=Math.round(d[0][columns[i+4+14]]);
+            m.push({'pop':m_pop,'age':(i+1)*5+2.5});
+            f.push({'pop':f_pop,'age':(i+1)*5+2.5});
+            $("#filter .box.m[age="+i+"]").attr("pop",m_pop);
+            $("#filter .box.f[age="+i+"]").attr("pop",f_pop);
+
+        }
+
+        for(var i=0;i<14;i++){
+            m2.push({'pop':Math.round(d_base[0][columns[i+4]]),'age':(i+1)*5+2.5});
+            f2.push({'pop':Math.round(d_base[0][columns[i+4+14]]),'age':(i+1)*5+2.5});
+            $("#filter .box.m[age="+i+"]").attr("base_pop",Math.round(d_base[0][columns[i+4]]));
+            $("#filter .box.f[age="+i+"]").attr("base_pop",Math.round(d_base[0][columns[i+4+14]]));
+        }
+
+        adjust_bothends(m);
+        adjust_bothends(f);
+        adjust_bothends(m2);
+        adjust_bothends(f2);
+        m2.reverse();
+        f2.reverse();
+        m_all=m.concat(m2);
+        f_all=f.concat(f2);
+
+        /*
+        var first_one=m.shift().pop;
+        m.unshift({'pop':first_one/2,'age':5+2.5})
+        m.unshift({'pop':first_one/2,'age':1+2.5})
+        
+        m.unshift({'pop':0,'age':0})
+        m.push({'pop':0,'age':75+2.5});
+        
+        var first_one=f.shift().pop;
+        f.unshift({'pop':first_one/2,'age':5+2.5})
+        f.unshift({'pop':first_one/2,'age':1+2.5})
+        
+        f.unshift({'pop':0,'age':0})
+        f.push({'pop':0,'age':75+2.5});
+*/
+
+        //console.log(name,m,f);
+
+
+
+        // define the 1st line
+        var valueline = d3.line()
+            .x(function(d) { return x(d.age); })
+            .y(function(d) { return y(d.pop); }).curve(d3.curveCatmullRom.alpha(0.5));
+
+        var area = d3.area()
+            .x(function(d) { return x(d.age); })
+            .y1(function(d) { return y(d.pop); }).curve(d3.curveCatmullRom.alpha(0.5))
+            .y0(y(0));
+        
+
+
+        if(d3.select("#pop_m")._groups[0][0] == null){
+            // Add the valueline path.
+            detail.append("path")
+                .attr("id","pop_m")
+                .attr("class", "area m")
+            
+            detail.append("path")
+                .attr("id","pop_f")
+                .attr("class", "area f")
+        
+        }
+
+
+        // This allows to find the closest X index of the mouse:
+        var bisect = d3.bisector(function(d) { return d.age; }).left;
+
+
+        // What happens when the mouse move -> show the annotations at the right positions.
+        function mouseover() {
+            desc_box.style("opacity",1)
+        }
+
+        function mousemove() {
+            // recover coordinate we need
+            var x0 = x.invert(d3.mouse(this)[0]);
+            var i = bisect(f, x0);
+            selectedData = f[i];
+            basedata=f2[16-i];
+            var mpop1=m[i].pop;
+            var mpop2=m[16-i].pop;
+            var mpop_diff=mpop1-mpop2;
+            
+            var fpop1=f[i].pop;
+            var fpop2=f[16-i].pop;
+            var fpop_diff=fpop1-fpop2;
+            if(mpop_diff>0) mpop_diff="+"+mpop_diff;
+            if(fpop_diff>0) fpop_diff="+"+fpop_diff;
+            var s='<i class="fas fa-female"></i>'+fpop_diff+' ( '+fpop2 +' > '+fpop1+')<br>';
+            s+='<i class="fas fa-male"></i>'+mpop_diff+' ( '+mpop2 +' > '+mpop1+')';
+ 
+    
+
+            desc_box
+                .attr("x",x(selectedData.age)-5)
+                .attr("y",y(selectedData.pop)-5)
+                .html(s)
+            console.log(x0,i,selectedData);
+        }
+        function mouseout() { 
+            desc_box.style("opacity", 0)
+        }
+
+        // Create the text that travels along the curve of chart
+        var desc_box = detail
+            .append('g')
+            .append('text')
+            .style("opacity", 0)
+            .attr("text-anchor", "left")
+            .attr("alignment-baseline", "middle")
+
+        detail.select("#pop_m")
+            .data([m_all])
+            .transition()
+            .attr("d", valueline);
+        detail.select("#pop_f")
+            .data([f_all])
+            .transition()
+            .attr("d", valueline);
+
+        
+        show_pop();
+        //age_hour_heatmap(code);
+    }
+
+    function adjust_bothends(arr){
+        var first_one=arr.shift().pop;
+        arr.unshift({'pop':Math.round(first_one/2),'age':5+2.5})
+        arr.unshift({'pop':Math.round(first_one/2),'age':0})
+        //arr.unshift({'pop':0,'age':0})
+        
+        var last_one=arr.pop().pop;
+        arr.push({'pop':Math.round(last_one/2),'age':70+2.5});
+        arr.push({'pop':Math.round(last_one/3),'age':80});
+    }
+
+    function show_origin_map(data,hour){
+        var columns=data.columns;
+
+        data.forEach(function(d, i) {
+            if(d.hour==hour){
+                var pop=d.population;
+
+                var sig_cd=d.resident_gu_code;
+                var obj_id="#g"+sig_cd;
+                var obj=d3.select(obj_id);
+                //console.log(obj_id,i,sig_cd,pop,obj,d);
+                //console.log(hour,i);
+                
+                var t=myScale_origin(pop);
+                obj.style("fill", d3.interpolateYlGnBu(t));
+        
+            }
+        });
+    }
+
+
+    function show_map(data,hour){
+        var columns=data.columns;
+        var time_str=(hour+12)%12;
+                if(time_str==0) time_str="12";
+                time_str=(hour>=12?"오후 ":"오전 ")+time_str
+                //if(hour==0) time_str="자정"
+                //if(hour==12) time_str="정오";
+
+                d3.select("#time").text(time_str);
+        var filter_count=d3.selectAll("#filter .box.selected").nodes().length;
+        
+        var mxvalue=10000*Math.ceil(8*filter_count/28);
+        console.log(filter_count,mxvalue);
+        if(filter_count<28) make_legend(0,parseInt(mxvalue/10000));
+        else make_legend(-5,5);
+
+        var relative_scale=d3.scaleLinear()
+                .range([0,1]) //
+                .domain([0, mxvalue]);
+            
+        data.forEach(function(d, i) {
+            if(d.hour==hour){
+                var pop=d.population;
+                var sig_cd=d.dong_code;
+                var obj_id="#c"+sig_cd+"00";
+                var diff=pop-popbase.get("c"+sig_cd);
+                var obj=d3.select(obj_id);
+                
+
+                if(d3.selectAll("#filter .box:not(.selected)").nodes().length){
+                    pop=0;
+                    for(var i=0;i<28;i++){
+                        pop+=Number(d[columns[i+4]])*filtertable[i];
+                    }
+                    t=relative_scale(pop);
+                    obj.style("fill", d3.interpolateYlGnBu(t));
+                    //console.log("window",diff)
+                }else{
+                    var t=myScale(diff);
+                    obj.style("fill", colorScale(t));
+
+                }
+                //console.log(obj_id,i,sig_cd,pop,obj,d);
+                //console.log(hour,i);
+                
+                
+                
+                obj.attr("hour",hour);
+
+                show_pop();
+        
+            }
+        });
+
+
+ 
+    }
+
+    function show_pop(){
+        var total_pop = 0;
+            $('#filter .box').each(function() {
+                total_pop += Number($(this).attr("pop"));
+            });
+        var sel_pop = 0;
+        $('#filter .box.selected').each(function() {
+            sel_pop += Number($(this).attr("pop"));
+        });
+        var s=d3.format(",")(sel_pop)+"<br>";
+        if(sel_pop!=total_pop) s+=d3.format(".1%")(sel_pop/total_pop)
+        desc_pop.html(s);
+    }
+
+
+    d3.select(window).on("keydown", function() {
+        //console.log(d3.event.keyCode,d3.event);
+        var val=slider2.value();
+        if(d3.event.keyCode==39){
+            val++;
+        }
+        if(d3.event.keyCode==37){
+            val--;
+        }
+        if(val<0) val=23;
+        if(val>23) val=0;
+        slider2.value(val);
+        var selected_obj=d3.select(".municipality.select").node(0);
+        if(selected_obj) show_detail(selected_obj);
+    });
+
+    var slider2 = d3.sliderTop()
+    .min(0)
+    .max(23)
+    .step(1)
+    .ticks(25)
+    .width(325)
+    .displayValue(false)
+    .on('onchange', val => {
+        d3.select("#time_guide").style("transition","x 0")
+        .attr("x", function(d) { return val * gridSize; })
+        .classed("transition","")
+
+
+        if(d3.select("#close_button").style("display")=="block") show_origin_map(origin_data,val);
+        show_map(popData,val);
+
+        var selected_obj=d3.select(".municipality.select").node(0);
+        if(selected_obj) show_detail(selected_obj);
+    });
+
+  var group2 = d3.select("div#slider2").append("svg")
+    .attr("width", 370)
+    .attr("height", 50)
+    .append("g")
+    .attr("transform", "translate(25,35)");
+
+  group2.call(slider2);
+
+
+
+    </script>
+
+<script type="text/javascript">
+    (function(w, d, a){
+        w.__beusablerumclient__ = {
+            load : function(src){
+                var b = d.createElement("script");
+                b.src = src; b.async=true; b.type = "text/javascript";
+                d.getElementsByTagName("head")[0].appendChild(b);
+            }
+        };w.__beusablerumclient__.load(a);
+    })(window, document, '//rum.beusable.net/script/b190401e161537u159/eec2f1b7bd');
+    </script>
+
+  </body>
+</html>
