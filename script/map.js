@@ -1,25 +1,20 @@
 function map_init(boxId, mapJson, mapObj){
-    var WIDTH = 1024,
-    HEIGHT = 768
+    var WIDTH = 750,
+    HEIGHT = 610;
     
     var svg = d3.select(boxId).append("svg")
     .attr("width", WIDTH)
     .attr('height', HEIGHT);
 
     var map = svg.append("g").attr("id", "map");
-    svg.append("text")
-    .attr("id", "tooltip")
-    .attr("text-anchor", "middle")
-    .text("test")
     d3.json(mapJson).then(function(d){
         var mapData = topojson.feature(d, d.objects[mapObj]);
         var features = mapData.features;
         
-        var bounds = d3.geoBounds(mapData);
         var center = d3.geoCentroid(mapData);
-        
-        var distance = d3.geoDistance(bounds[0], bounds[1]);
-        var scale = HEIGHT / distance / Math.sqrt(2) * 1.5;
+        center[0] -= 0.015;
+        center[1] += 0.015;
+        var scale = 100000;
     
         var projection = d3.geoMercator().translate([WIDTH/2, HEIGHT/2])
             .scale(scale).center(center);
@@ -30,8 +25,7 @@ function map_init(boxId, mapJson, mapObj){
             .enter().append("path")
             .attr("d", path)
             .on("mouseover", function(d){
-                let featureCentroid = d3.geoPath().projection(projection).centroid(d);
-                setTooltip(featureCentroid[0], featureCentroid[1]+5, d.properties.SIG_KOR_LN+" "+d.properties.ADM_DR_NM);
+                setTooltip(d.properties.SIG_KOR_LN, d.properties.ADM_DR_NM, d.properties.EMD_HJ_CD);
             });
 
             // .on("mouseover", function(){ // 마우스 호버 시 z-index 높이기 위함
@@ -40,10 +34,10 @@ function map_init(boxId, mapJson, mapObj){
             // mouseout
     });
 
-    var tooltip = document.getElementById("tooltip");
-    function setTooltip(x, y, text){
-        tooltip.textContent = text;
-        tooltip.setAttribute("x", x);
-        tooltip.setAttribute("y", y);
+    var guName = document.querySelector("#gu_nm > h3");
+    var dongName = document.querySelector("#dong_nm > h3");
+    function setTooltip(gu, dong, hjCd){
+        guName.innerText = gu;
+        dongName.innerText = dong;
     }
 }

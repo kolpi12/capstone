@@ -1,0 +1,18 @@
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+#main_map {
+    float: left;
+}
+
+#name_box {
+    float: left;
+    margin: 0 0 0 10px;
+}
+
+#name_box h3 {
+    margin: 0;
+}
