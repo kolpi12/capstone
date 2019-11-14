@@ -1,8 +1,7 @@
 #map path {
-    fill: white;
-    stroke: black;
+    stroke: red;
 }
-
+/* 
 #map path:hover {
     fill: orange;
-}
+} */
