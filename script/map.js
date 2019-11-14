@@ -40,7 +40,9 @@ function documentInit(boxId, mapJson, mapObj) {
                     console.log(element['hour_pop'])
                 }
             }
-            color = d3.scaleThreshold().domain([0, max]).range(d3.schemeReds[3]);
+            color = d3.scaleThreshold()
+                .domain([1000,2000,3000,4000,5000,10000,20000,50000])
+                .range(d3.schemeYlOrBr[9]);
             mapSvg.selectAll("path")
                 .attr("fill", function(d) { return color(dong[d.properties.EMD_HJ_CD]['hour_pop'][12]); });
         });
@@ -79,7 +81,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 .enter().append("path")
                 .attr("d", path)
                 .on("mouseover", function(d) {
-                    setTooltip(d.properties.SIG_KOR_LN, d.properties.ADM_DR_NM, color(dong[d.properties.EMD_HJ_CD]['hour_pop'][12]));
+                    setTooltip(d.properties.SIG_KOR_LN, d.properties.ADM_DR_NM, dong[d.properties.EMD_HJ_CD]['hour_pop'][12]);
                 })
                 // .on("mouseover", function(){ // 마우스 호버 시 z-index 높이기 위함
                 //     d3.select(this).raise();
