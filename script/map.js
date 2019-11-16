@@ -1,7 +1,8 @@
 class Dong{
-    constructor(code, name) {
+    constructor(code, gu, dong) {
         this.dongHjCode = code;
-        this.dongName = name;
+        this.guName = gu;
+        this.dongName = dong;
         this.hourPop = {};
         for(let index = 0; index < 24; index++) {
             this.hourPop[index] = 0;
@@ -26,13 +27,12 @@ function documentInit(boxId, mapJson, mapObj) {
     var svg = d3.select(boxId).append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT);
+    var checked = {dongHjCode:11110515};
     var mapSvg = svg.append('g').attr('id', 'map');
     var guName = document.querySelector('#gu_nm > h3');
     var dongName = document.querySelector('#dong_nm > h3');
     var hjCode = document.querySelector('#hj_cd > h3');
     var pop = document.querySelector('#pop > h3');
-    var naturalBreak = false;
-    var everyPop = {};
     var timeSlider = document.querySelector('#time_slider');
     setTooltip('종로구', '청운효자동', 11110515, 12345);
     d3.select('#time_slider').on('input', function() { changeBaseTime(+this.value); });
@@ -63,11 +63,6 @@ function documentInit(boxId, mapJson, mapObj) {
 
     function changeBaseTime(time) {
         d3.select('#time_slider').property('value', time);
-        if (naturalBreak) {
-            color = d3.scaleCluster()
-                .domain(everyPop[timeSlider.value])
-                .range(d3.schemeYlOrBr[9]);
-        }
         changeFeatureColor();
         pop.innerText = dong[hjCode.innerText].getHourPop(timeSlider.value);
         document.querySelector('#time').innerText = `${pad(timeSlider.value, 2)}시`;
@@ -78,14 +73,14 @@ function documentInit(boxId, mapJson, mapObj) {
         d3.json("json/dong_cd.json").then(function(d) {
             for(let index = 0; index < d.length; index++) {
                 let data = d[index];
-                dong[data.H_DNG_CD] = new Dong(data.H_DNG_CD, data.H_DNG_NM);
+                dong[data.H_DNG_CD] = new Dong(data.H_DNG_CD, data.CT_NM, data.H_DNG_NM);
             }
             changeBaseTime(12);
         });
     }
 
     // 동 유동인구 초기화
-    function floatingPopInit(map) {
+    function floatingPopInit() {
         d3.csv('data/floating_pop/INNER_PEOPLE_20191101.csv').then(function(d) {
             for (let index = 0; index < d.length; index++) {
                 let data = d[index];
@@ -93,20 +88,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수']);
             }
             changeFeatureColor();
-            if (naturalBreak) {
-                for (let index = 0; index < 24; index++) {
-                    everyPop[index] = [];
-                    for (const key in dong) {
-                        if (dong.hasOwnProperty(key)) {
-                            const element = dong[key];
-                            everyPop[index].push(element.hourPop[index]);
-                        }
-                    }
-                }
-                color = d3.scaleCluster()
-                    .domain(everyPop[timeSlider.value])
-                    .range(d3.schemeYlOrBr[9]);
-            }
+            checked = dong['11110515'];
         });
     }
 
@@ -125,10 +107,23 @@ function documentInit(boxId, mapJson, mapObj) {
                 .data(mapData.features)
                 .enter().append('path')
                 .attr('d', path)
+                .attr('class', function(d) { return 'c'+d.properties.EMD_HJ_CD; })
+                .on('click', function(d) {
+                    mapSvg.select('.c'+checked['dongHjCode']).attr('style', null);
+                    checked = dong[d.properties.EMD_HJ_CD];
+                    d3.select(this).attr('style', 'stroke-width: 3; stroke: red;');
+                })
                 .on('mouseover', function(d) {
+                    d3.select(this).raise().attr('style', 'stroke-width: 3;');
                     let prop = d.properties;
                     setTooltip(prop.SIG_KOR_LN, prop.ADM_DR_NM, prop.EMD_HJ_CD, dong[prop.EMD_HJ_CD].getHourPop(timeSlider.value));
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this).attr('style', null);
+                    d3.select('.c'+checked['dongHjCode']).raise().attr('style', 'stroke-width: 3; stroke: red;');
+                    setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked.getHourPop(timeSlider.value));
                 });
+            d3.select('.c' + checked['dongHjCode']).attr('style', 'stroke-width: 3; stroke: red;');
         });
     }
 
@@ -169,7 +164,7 @@ function documentInit(boxId, mapJson, mapObj) {
     }
 
     mapInit(mapJson, mapObj);
-    floatingPopInit(mapSvg);
+    floatingPopInit();
     legends();
 }
 
