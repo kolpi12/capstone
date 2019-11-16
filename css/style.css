@@ -12,7 +12,14 @@
     float: left;
     margin: 0 0 0 10px;
 }
-
 #name_box h3 {
+    display: inline;
+}
+
+h3 {
     margin: 0;
+}
+
+#chart {
+    clear: left;
 }
