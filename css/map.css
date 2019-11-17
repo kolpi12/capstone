@@ -1,10 +1,18 @@
-#map path, #legends {
+.checked {
+    stroke: red;
+    stroke-width: 3;
+}
+
+path, #legends {
     stroke: black;
+}
+
+path:hover {
+    stroke-width: 3;
 }
 
 #gu_map path {
     fill: white;
-    stroke: black;
 }
 
 /* 

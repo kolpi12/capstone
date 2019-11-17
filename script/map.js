@@ -128,14 +128,8 @@ function documentInit(boxId, mapJson, mapObj) {
                 .data(mapData.features)
                 .enter().append('path')
                 .attr('d', path)
-                .attr('class', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
-                .on('mouseover', function(d) {
-                    d3.select(this).raise().attr('style', 'stroke: black; stroke-width: 3; fill: white;');
-                })
-                .on('mouseout', function(d) {
-                    d3.select(this).attr('style', null);
-                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
-                })
+                .attr('id', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
+                .on('mouseover', function(d) { d3.select(this).raise() });
         });
     }
 
@@ -154,26 +148,24 @@ function documentInit(boxId, mapJson, mapObj) {
                 .data(mapData.features)
                 .enter().append('path')
                 .attr('d', path)
-                .attr('class', function(d) { return 'c'+d.properties.EMD_HJ_CD; })
+                .attr('id', function(d) { return 'c'+d.properties.EMD_HJ_CD; })
                 .on('click', function(d) {
-                    mapSvg.select('.c'+checked['dongHjCode']).attr('style', null);
-                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).attr('style', null);
+                    mapSvg.select('#c'+checked['dongHjCode']).attr('class', null);
+                    d3.select('#c' + parseInt(checked['dongHjCode']/1000)).attr('class', null);
                     checked = dong[d.properties.EMD_HJ_CD];
-                    d3.select(this).attr('style', 'stroke-width: 3; stroke: red;');
-                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
+                    d3.select(this).raise().attr('class', 'checked');
+                    d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
                 })
                 .on('mouseover', function(d) {
-                    d3.select(this).raise().attr('style', 'stroke-width: 3;');
+                    d3.select(this).raise();
                     let prop = d.properties;
                     setTooltip(prop.SIG_KOR_LN, prop.ADM_DR_NM, prop.EMD_HJ_CD, dong[prop.EMD_HJ_CD].getHourPop(timeSlider.value));
                 })
                 .on('mouseout', function(d) {
-                    d3.select(this).attr('style', null);
-                    d3.select('.c'+checked['dongHjCode']).raise().attr('style', 'stroke-width: 3; stroke: red;');
                     setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked.getHourPop(timeSlider.value));
                 });
-            d3.select('.c' + checked['dongHjCode']).attr('style', 'stroke-width: 3; stroke: red;');
-            d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
+            d3.select('#c' + checked['dongHjCode']).attr('class', 'checked');
+            d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
         });
     }
 
