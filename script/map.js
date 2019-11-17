@@ -4,24 +4,21 @@ class Dong{
         this.guName = gu;
         this.dongName = dong;
         this.hourPop = {};
-        for(let index = 0; index < 24; index++) {
-            this.hourPop[index] = 0;
-        }
+        for(let index = 0; index < 24; index++) this.hourPop[index] = 0;
     }
     
-    plusHourPop(time, value) {
-        this.hourPop[time] += value;
-    }
-
-    getHourPop(time) {
-        return this.hourPop[time];
-    }
+    plusHourPop(time, value) { this.hourPop[time] += value; }
+    getHourPop(time) { return this.hourPop[time]; }
 }
 
 class Gu{
     constructor(code, gu) {
         this.guHjCode = code;
         this.guName = gu;
+        this.outPop = {};
+        for(let index = 0; index < 24; index++) {
+            this.outPop[index] = {};
+        }
     }
 }
 
@@ -84,7 +81,13 @@ function documentInit(boxId, mapJson, mapObj) {
         d3.json('json/gu_cd.json').then(function(d) {
             for(let index = 0; index < d.length; index++) {
                 let data = d[index];
-                gu[data.RESD_CD] = new Gu(data.RESD_CD, data.RESD_LCT_NM);
+                gu[data.RESD_CD] = new Gu(data.RESD_CD, data.RESC_LCT_NM);
+            }
+            for (const code in gu) {
+                if (gu.hasOwnProperty(code)) {
+                    const element = gu[code];
+                    for (let index = 0; index < 24; index++) { Object.keys(dong).forEach(code => { element['outPop'][index][code] = 0; }); }
+                }
             }
         });
     }
@@ -107,10 +110,21 @@ function documentInit(boxId, mapJson, mapObj) {
                 let data = d[index];
                 data['총생활인구수'] = Math.round(data['총생활인구수']);
                 dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수']);
+                gu[data['거주지 자치구 코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = data['총생활인구수'];
+            }
+        });
+        d3.csv('data/floating_pop/METRO_PEOPLE_20191101.csv').then(function(d) {
+            for (let index = 0; index < d.length; index++) {
+                const data = d[index];
+                if(gu[data['대도시권거주지코드']] === undefined) {}
+                else {
+                    gu[data['대도시권거주지코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = data['총생활인구수'];
+                    dong[data['행정동코드']].plusHourPop(+(data['시간대구분']), +data['총생활인구수'])
+                }
             }
             changeFeatureColor();
             checked = dong['11110515'];
-        });
+        })
     }
 
     // 구 지도 그리기
@@ -130,6 +144,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 .attr('d', path)
                 .attr('id', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
                 .on('mouseover', function(d) { d3.select(this).raise() });
+            d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
         });
     }
 
@@ -165,7 +180,6 @@ function documentInit(boxId, mapJson, mapObj) {
                     setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked.getHourPop(timeSlider.value));
                 });
             d3.select('#c' + checked['dongHjCode']).attr('class', 'checked');
-            d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
         });
     }
 
@@ -205,8 +219,8 @@ function documentInit(boxId, mapJson, mapObj) {
 
     }
 
-    guMapInit('json/2_SIG.json', '2_SIG');
     mapInit(mapJson, mapObj);
+    guMapInit('json/2_SIG.json', '2_SIG');
     floatingPopInit();
     legends();
 }
