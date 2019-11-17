@@ -22,12 +22,14 @@ function documentInit(boxId, mapJson, mapObj) {
     // 각종 변수 초기화
     var dong = {};
     dongInit();
-    const WIDTH = 750,
-    HEIGHT = 610;
+    const WIDTH = 970,
+    HEIGHT = 800;
     var svg = d3.select(boxId).append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT);
     var checked = {dongHjCode:11110515};
+    var guSvg = d3.select('#gu_map').append('svg').attr('height', WIDTH*2/3).attr('width', HEIGHT*2/3+50)
+        .append('g').attr('id', 'guMap');
     var mapSvg = svg.append('g').attr('id', 'map');
     var guName = document.querySelector('#gu_nm > h3');
     var dongName = document.querySelector('#dong_nm > h3');
@@ -92,13 +94,32 @@ function documentInit(boxId, mapJson, mapObj) {
         });
     }
 
+    // 구 지도 그리기
+    function guInit(mapJson, mapObj) {
+        d3.json(mapJson).then(function(d) {
+            let mapData = topojson.feature(d, d.objects[mapObj]);
+            let center = d3.geoCentroid(mapData);
+            center[0] += 0.5; center[1] -= 0.15;
+            let scale = 19000;
+            let projection = d3.geoMercator().translate([WIDTH/2, HEIGHT/2])
+                .scale(scale).center(center);
+            let path = d3.geoPath().projection(projection);
+
+            guSvg.selectAll('path')
+                .data(mapData.features)
+                .enter().append('path')
+                .attr('d', path)
+                .attr('style', 'fill: white; stroke: black;');
+        });
+    }
+
     // 동 지도 그리기
     function mapInit(mapJson, mapObj) {
         d3.json(mapJson).then(function(d) {
             let mapData = topojson.feature(d, d.objects[mapObj]);
             let center = d3.geoCentroid(mapData);
             center[0] -= 0.015; center[1] += 0.015;
-            let scale = 100000;
+            let scale = 130000;
             let projection = d3.geoMercator().translate([WIDTH/2, HEIGHT/2])
                 .scale(scale).center(center);
             let path = d3.geoPath().projection(projection);
@@ -164,6 +185,7 @@ function documentInit(boxId, mapJson, mapObj) {
     }
 
     mapInit(mapJson, mapObj);
+    setTimeout(guInit('json/2_SIG.json', '2_SIG'), 5000);
     floatingPopInit();
     legends();
 }
