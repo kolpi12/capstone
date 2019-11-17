@@ -18,10 +18,19 @@ class Dong{
     }
 }
 
+class Gu{
+    constructor(code, gu) {
+        this.guHjCode = code;
+        this.guName = gu;
+    }
+}
+
 function documentInit(boxId, mapJson, mapObj) {
     // 각종 변수 초기화
     var dong = {};
+    var gu = {};
     dongInit();
+    guInit();
     const WIDTH = 970,
     HEIGHT = 800;
     var svg = d3.select(boxId).append('svg')
@@ -70,6 +79,16 @@ function documentInit(boxId, mapJson, mapObj) {
         document.querySelector('#time').innerText = `${pad(timeSlider.value, 2)}시`;
     }
 
+    // 구 초기화
+    function guInit() {
+        d3.json('json/gu_cd.json').then(function(d) {
+            for(let index = 0; index < d.length; index++) {
+                let data = d[index];
+                gu[data.RESD_CD] = new Gu(data.RESD_CD, data.RESD_LCT_NM);
+            }
+        });
+    }
+
     // 동 초기화
     function dongInit() {
         d3.json("json/dong_cd.json").then(function(d) {
@@ -95,7 +114,7 @@ function documentInit(boxId, mapJson, mapObj) {
     }
 
     // 구 지도 그리기
-    function guInit(mapJson, mapObj) {
+    function guMapInit(mapJson, mapObj) {
         d3.json(mapJson).then(function(d) {
             let mapData = topojson.feature(d, d.objects[mapObj]);
             let center = d3.geoCentroid(mapData);
@@ -109,7 +128,14 @@ function documentInit(boxId, mapJson, mapObj) {
                 .data(mapData.features)
                 .enter().append('path')
                 .attr('d', path)
-                .attr('style', 'fill: white; stroke: black;');
+                .attr('class', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
+                .on('mouseover', function(d) {
+                    d3.select(this).raise().attr('style', 'stroke: black; stroke-width: 3; fill: white;');
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this).attr('style', null);
+                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
+                })
         });
     }
 
@@ -131,8 +157,10 @@ function documentInit(boxId, mapJson, mapObj) {
                 .attr('class', function(d) { return 'c'+d.properties.EMD_HJ_CD; })
                 .on('click', function(d) {
                     mapSvg.select('.c'+checked['dongHjCode']).attr('style', null);
+                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).attr('style', null);
                     checked = dong[d.properties.EMD_HJ_CD];
                     d3.select(this).attr('style', 'stroke-width: 3; stroke: red;');
+                    d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
                 })
                 .on('mouseover', function(d) {
                     d3.select(this).raise().attr('style', 'stroke-width: 3;');
@@ -145,6 +173,7 @@ function documentInit(boxId, mapJson, mapObj) {
                     setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked.getHourPop(timeSlider.value));
                 });
             d3.select('.c' + checked['dongHjCode']).attr('style', 'stroke-width: 3; stroke: red;');
+            d3.select('.c' + parseInt(checked['dongHjCode']/1000)).raise().attr('style', 'stroke: red; stroke-width: 3;');
         });
     }
 
@@ -184,8 +213,8 @@ function documentInit(boxId, mapJson, mapObj) {
 
     }
 
+    guMapInit('json/2_SIG.json', '2_SIG');
     mapInit(mapJson, mapObj);
-    setTimeout(guInit('json/2_SIG.json', '2_SIG'), 5000);
     floatingPopInit();
     legends();
 }

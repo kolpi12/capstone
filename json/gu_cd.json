@@ -1,0 +1,464 @@
+[
+  {
+    "RESD_CD": 11110,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "종로구",
+    "RESC_CT_NM": "종로구"
+  },
+  {
+    "RESD_CD": 11140,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "중구",
+    "RESC_CT_NM": "중구"
+  },
+  {
+    "RESD_CD": 11170,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "용산구",
+    "RESC_CT_NM": "용산구"
+  },
+  {
+    "RESD_CD": 11200,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "성동구",
+    "RESC_CT_NM": "성동구"
+  },
+  {
+    "RESD_CD": 11215,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "광진구",
+    "RESC_CT_NM": "광진구"
+  },
+  {
+    "RESD_CD": 11230,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "동대문구",
+    "RESC_CT_NM": "동대문구"
+  },
+  {
+    "RESD_CD": 11260,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "중랑구",
+    "RESC_CT_NM": "중랑구"
+  },
+  {
+    "RESD_CD": 11290,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "성북구",
+    "RESC_CT_NM": "성북구"
+  },
+  {
+    "RESD_CD": 11305,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "강북구",
+    "RESC_CT_NM": "강북구"
+  },
+  {
+    "RESD_CD": 11320,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "도봉구",
+    "RESC_CT_NM": "도봉구"
+  },
+  {
+    "RESD_CD": 11350,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "노원구",
+    "RESC_CT_NM": "노원구"
+  },
+  {
+    "RESD_CD": 11380,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "은평구",
+    "RESC_CT_NM": "은평구"
+  },
+  {
+    "RESD_CD": 11410,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "서대문구",
+    "RESC_CT_NM": "서대문구"
+  },
+  {
+    "RESD_CD": 11440,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "마포구",
+    "RESC_CT_NM": "마포구"
+  },
+  {
+    "RESD_CD": 11470,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "양천구",
+    "RESC_CT_NM": "양천구"
+  },
+  {
+    "RESD_CD": 11500,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "강서구",
+    "RESC_CT_NM": "강서구"
+  },
+  {
+    "RESD_CD": 11530,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "구로구",
+    "RESC_CT_NM": "구로구"
+  },
+  {
+    "RESD_CD": 11545,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "금천구",
+    "RESC_CT_NM": "금천구"
+  },
+  {
+    "RESD_CD": 11560,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "영등포구",
+    "RESC_CT_NM": "영등포구"
+  },
+  {
+    "RESD_CD": 11590,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "동작구",
+    "RESC_CT_NM": "동작구"
+  },
+  {
+    "RESD_CD": 11620,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "관악구",
+    "RESC_CT_NM": "관악구"
+  },
+  {
+    "RESD_CD": 11650,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "서초구",
+    "RESC_CT_NM": "서초구"
+  },
+  {
+    "RESD_CD": 11680,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "강남구",
+    "RESC_CT_NM": "강남구"
+  },
+  {
+    "RESD_CD": 11710,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "송파구",
+    "RESC_CT_NM": "송파구"
+  },
+  {
+    "RESD_CD": 11740,
+    "RESD_DO_NM": "서울",
+    "RESC_LCT_NM": "강동구",
+    "RESC_CT_NM": "강동구"
+  },
+  {
+    "RESD_CD": 28110,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "중구",
+    "RESC_CT_NM": "중구"
+  },
+  {
+    "RESD_CD": 28140,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "동구",
+    "RESC_CT_NM": "동구"
+  },
+  {
+    "RESD_CD": 28170,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "남구",
+    "RESC_CT_NM": "남구"
+  },
+  {
+    "RESD_CD": 28185,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "연수구",
+    "RESC_CT_NM": "연수구"
+  },
+  {
+    "RESD_CD": 28200,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "남동구",
+    "RESC_CT_NM": "남동구"
+  },
+  {
+    "RESD_CD": 28237,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "부평구",
+    "RESC_CT_NM": "부평구"
+  },
+  {
+    "RESD_CD": 28245,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "계양구",
+    "RESC_CT_NM": "계양구"
+  },
+  {
+    "RESD_CD": 28260,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "서구",
+    "RESC_CT_NM": "서구"
+  },
+  {
+    "RESD_CD": 28710,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "강화군",
+    "RESC_CT_NM": "강화군"
+  },
+  {
+    "RESD_CD": 28720,
+    "RESD_DO_NM": "인천",
+    "RESC_LCT_NM": "옹진군",
+    "RESC_CT_NM": "옹진군"
+  },
+  {
+    "RESD_CD": 41111,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "수원시 장안구",
+    "RESC_CT_NM": "장안구"
+  },
+  {
+    "RESD_CD": 41113,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "수원시 권선구",
+    "RESC_CT_NM": "권선구"
+  },
+  {
+    "RESD_CD": 41115,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "수원시 팔달구",
+    "RESC_CT_NM": "팔달구"
+  },
+  {
+    "RESD_CD": 41117,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "수원시 영통구",
+    "RESC_CT_NM": "영통구"
+  },
+  {
+    "RESD_CD": 41131,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "성남시 수정구",
+    "RESC_CT_NM": "수정구"
+  },
+  {
+    "RESD_CD": 41133,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "성남시 중원구",
+    "RESC_CT_NM": "중원구"
+  },
+  {
+    "RESD_CD": 41135,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "성남시 분당구",
+    "RESC_CT_NM": "분당구"
+  },
+  {
+    "RESD_CD": 41150,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "의정부시",
+    "RESC_CT_NM": "의정부시"
+  },
+  {
+    "RESD_CD": 41171,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "안양시 만안구",
+    "RESC_CT_NM": "만안구"
+  },
+  {
+    "RESD_CD": 41173,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "안양시 동안구",
+    "RESC_CT_NM": "동안구"
+  },
+  {
+    "RESD_CD": 41190,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "부천시",
+    "RESC_CT_NM": "부천시"
+  },
+  {
+    "RESD_CD": 41210,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "광명시",
+    "RESC_CT_NM": "광명시"
+  },
+  {
+    "RESD_CD": 41220,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "평택시",
+    "RESC_CT_NM": "평택시"
+  },
+  {
+    "RESD_CD": 41250,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "동두천시",
+    "RESC_CT_NM": "동두천시"
+  },
+  {
+    "RESD_CD": 41271,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "안산시 상록구",
+    "RESC_CT_NM": "상록구"
+  },
+  {
+    "RESD_CD": 41273,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "안산시 단원구",
+    "RESC_CT_NM": "단원구"
+  },
+  {
+    "RESD_CD": 41281,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "고양시 덕양구",
+    "RESC_CT_NM": "덕양구"
+  },
+  {
+    "RESD_CD": 41285,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "고양시 일산동구",
+    "RESC_CT_NM": "일산동구"
+  },
+  {
+    "RESD_CD": 41287,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "고양시 일산서구",
+    "RESC_CT_NM": "일산서구"
+  },
+  {
+    "RESD_CD": 41290,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "과천시",
+    "RESC_CT_NM": "과천시"
+  },
+  {
+    "RESD_CD": 41310,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "구리시",
+    "RESC_CT_NM": "구리시"
+  },
+  {
+    "RESD_CD": 41360,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "남양주시",
+    "RESC_CT_NM": "남양주시"
+  },
+  {
+    "RESD_CD": 41370,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "오산시",
+    "RESC_CT_NM": "오산시"
+  },
+  {
+    "RESD_CD": 41390,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "시흥시",
+    "RESC_CT_NM": "시흥시"
+  },
+  {
+    "RESD_CD": 41410,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "군포시",
+    "RESC_CT_NM": "군포시"
+  },
+  {
+    "RESD_CD": 41430,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "의왕시",
+    "RESC_CT_NM": "의왕시"
+  },
+  {
+    "RESD_CD": 41450,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "하남시",
+    "RESC_CT_NM": "하남시"
+  },
+  {
+    "RESD_CD": 41461,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "용인시 처인구",
+    "RESC_CT_NM": "처인구"
+  },
+  {
+    "RESD_CD": 41463,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "용인시 기흥구",
+    "RESC_CT_NM": "기흥구"
+  },
+  {
+    "RESD_CD": 41465,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "용인시 수지구",
+    "RESC_CT_NM": "수지구"
+  },
+  {
+    "RESD_CD": 41480,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "파주시",
+    "RESC_CT_NM": "파주시"
+  },
+  {
+    "RESD_CD": 41500,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "이천시",
+    "RESC_CT_NM": "이천시"
+  },
+  {
+    "RESD_CD": 41550,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "안성시",
+    "RESC_CT_NM": "안성시"
+  },
+  {
+    "RESD_CD": 41570,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "김포시",
+    "RESC_CT_NM": "김포시"
+  },
+  {
+    "RESD_CD": 41590,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "화성시",
+    "RESC_CT_NM": "화성시"
+  },
+  {
+    "RESD_CD": 41610,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "광주시",
+    "RESC_CT_NM": "광주시"
+  },
+  {
+    "RESD_CD": 41630,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "양주시",
+    "RESC_CT_NM": "양주시"
+  },
+  {
+    "RESD_CD": 41650,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "포천시",
+    "RESC_CT_NM": "포천시"
+  },
+  {
+    "RESD_CD": 41670,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "여주시",
+    "RESC_CT_NM": "여주시"
+  },
+  {
+    "RESD_CD": 41800,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "연천군",
+    "RESC_CT_NM": "연천군"
+  },
+  {
+    "RESD_CD": 41820,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "가평군",
+    "RESC_CT_NM": "가평군"
+  },
+  {
+    "RESD_CD": 41830,
+    "RESD_DO_NM": "경기",
+    "RESC_LCT_NM": "양평군",
+    "RESC_CT_NM": "양평군"
+  }
+]
