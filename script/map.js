@@ -42,10 +42,15 @@ function documentInit(boxId, mapJson, mapObj) {
     var hjCode = document.querySelector('#hj_cd > h3');
     var pop = document.querySelector('#pop > h3');
     var timeSlider = document.querySelector('#time_slider');
+    var outGuName = document.querySelector('#out_gu_nm > h3');
+    var outPop = document.querySelector('#out_pop > h3');
     setTooltip('종로구', '청운효자동', 11110515, 12345);
     d3.select('#time_slider').on('input', function() { changeBaseTime(+this.value); });
     var color = d3.scaleThreshold()
         .domain([2000,4000,6000,8000,10000,20000,50000])
+        .range(d3.schemeYlOrBr[8]);
+    var color2 = d3.scaleThreshold()
+        .domain([100,200,400,500,1000,2000,5000])
         .range(d3.schemeYlOrBr[8]);
 
     // 편의 함수
@@ -64,9 +69,16 @@ function documentInit(boxId, mapJson, mapObj) {
         pop.innerText = popVal;
     }
 
+    function setOutTooltip(gu, popVal) {
+        outGuName.innerText = gu;
+        outPop.innerText = popVal;
+    }
+
     function changeFeatureColor() {
         mapSvg.selectAll('path')
             .attr('fill', function(d) { return color(dong[d.properties.EMD_HJ_CD].getHourPop(timeSlider.value)); });
+        guSvg.selectAll('path')
+            .attr('fill', function(d) { return color2(gu[d.properties.SIG_HJ_CD].outPop[timeSlider.value][checked.dongHjCode]) })
     }
 
     function changeBaseTime(time) {
@@ -118,7 +130,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 const data = d[index];
                 if(gu[data['대도시권거주지코드']] === undefined) {}
                 else {
-                    gu[data['대도시권거주지코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = data['총생활인구수'];
+                    gu[data['대도시권거주지코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = +data['총생활인구수'];
                     dong[data['행정동코드']].plusHourPop(+(data['시간대구분']), +data['총생활인구수'])
                 }
             }
@@ -143,7 +155,10 @@ function documentInit(boxId, mapJson, mapObj) {
                 .enter().append('path')
                 .attr('d', path)
                 .attr('id', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
-                .on('mouseover', function(d) { d3.select(this).raise() });
+                .on('mouseover', function(d) {
+                    d3.select(this).raise();
+                    setOutTooltip(d.properties.SIG_KOR_LN, gu[d.properties.SIG_HJ_CD]['outPop'][timeSlider.value][checked.dongHjCode])
+                })
             d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
         });
     }
@@ -170,6 +185,7 @@ function documentInit(boxId, mapJson, mapObj) {
                     checked = dong[d.properties.EMD_HJ_CD];
                     d3.select(this).raise().attr('class', 'checked');
                     d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
+                    changeFeatureColor();
                 })
                 .on('mouseover', function(d) {
                     d3.select(this).raise();

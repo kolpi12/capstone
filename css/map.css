@@ -11,10 +11,6 @@ path:hover {
     stroke-width: 3;
 }
 
-#gu_map path {
-    fill: white;
-}
-
 /* 
 #map path:hover {
     fill: orange;

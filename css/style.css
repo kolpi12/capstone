@@ -16,6 +16,11 @@
     display: inline;
 }
 
+#dong_label, #gu_label {
+    margin: 0 0 10px 0;
+    float: left;
+}
+
 h3 {
     margin: 0;
 }

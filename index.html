@@ -14,14 +14,20 @@
     <script src="script/map.js"></script>
 </head>
 <body onload="documentInit('#main_map', 'json/3_EMD.json', '3_EMD')">
-    <div id="main_map"></div>
+    <div id="main_map" style="border: 1px solid black;"></div>
     <div id="name_box">
-        <div id="gu_nm"><h3></h3></div>
-        <div id="dong_nm"><h3></h3></div>
-        <div id="hj_cd">행정동 코드 : <h3></h3></div>
-        <div id="pop">인구수 : <h3></h3></div>
-        <div>기준 시각 : <span id="time"></span> <input type="range" id="time_slider" min="0" max="23" value="12"></div>
-        <div id="gu_map" style="border: 1px solid black; margin-top: 20px;"></div>
+        <div id="dong_label">
+            <div id="gu_nm"><h3></h3></div>
+            <div id="dong_nm"><h3></h3></div>
+            <div id="hj_cd">행정동 코드 : <h3></h3></div>
+            <div id="pop">인구수 : <h3></h3></div>
+            <div>기준 시각 : <span id="time"></span> <input type="range" id="time_slider" min="0" max="23" value="12"></div>
+        </div>
+        <div id="gu_label">
+            <div id="out_gu_nm">유출지 : <h3></h3></div>
+            <div id="out_pop">유출 인구수 : <h3></h3></div>
+        </div>
+        <div id="gu_map" style="clear: left; border: 1px solid black; margin-top: 20px;"></div>
     </div>
     <div id="chart">
         <h3>인구수 범례</h3>
