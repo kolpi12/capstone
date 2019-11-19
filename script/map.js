@@ -4,11 +4,26 @@ class Dong{
         this.guName = gu;
         this.dongName = dong;
         this.hourPop = {};
-        for(let index = 0; index < 24; index++) this.hourPop[index] = 0;
+        this.male = {};
+        this.female = {};
+        for(let index = 0; index < 24; index++) {
+            this.hourPop[index] = 0;
+            this.male[index] = {};
+            this.female[index] = {};
+            for(let age = 10; age < 80; age += 5){
+                this.male[index][age] = 0;
+                this.female[index][age] = 0;
+            }
+        }
     }
     
-    plusHourPop(time, value) { this.hourPop[time] += value; }
-    getHourPop(time) { return this.hourPop[time]; }
+    plusHourPop(time, value) {
+        this.hourPop[time] += value;
+    }
+
+    getHourPop(time) {
+        return this.hourPop[time];
+    }
 }
 
 class Gu{
@@ -122,7 +137,15 @@ function documentInit(boxId, mapJson, mapObj) {
                 let data = d[index];
                 data['총생활인구수'] = Math.round(data['총생활인구수']);
                 dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수']);
-                gu[data['거주지 자치구 코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = data['총생활인구수'];
+                for (let age = 10; age < 80; age += 5) {
+                    let ageM = data[`남자${age}세부터${age+4}세생활인구수`];
+                    let ageF = data[`여자${age}세부터${age+4}세생활인구수`];
+                    if(ageM === '*') { ageM = 1; }
+                    if(ageF === '*') { ageF = 1; }
+                    dong[data['행정동코드']]['male'][+data['시간대구분']][age] += +ageM;
+                    dong[data['행정동코드']]['female'][+data['시간대구분']][age] += +ageF;
+                }
+                gu[data['거주지 자치구 코드']]['outPop'][+data['시간대구분']][data['행정동코드']] += +data['총생활인구수'];
             }
         });
         d3.csv('data/floating_pop/METRO_PEOPLE_20191101.csv').then(function(d) {
@@ -130,8 +153,8 @@ function documentInit(boxId, mapJson, mapObj) {
                 const data = d[index];
                 if(gu[data['대도시권거주지코드']] === undefined) {}
                 else {
-                    gu[data['대도시권거주지코드']]['outPop'][+(data['시간대구분'])][data['행정동코드']] = +data['총생활인구수'];
-                    dong[data['행정동코드']].plusHourPop(+(data['시간대구분']), +data['총생활인구수'])
+                    gu[data['대도시권거주지코드']]['outPop'][+data['시간대구분']][data['행정동코드']] += +data['총생활인구수'];
+                    dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수'])
                 }
             }
             changeFeatureColor();
@@ -232,7 +255,6 @@ function documentInit(boxId, mapJson, mapObj) {
             .attr('text-anchor', 'middle')
             .attr('x', function(d) { return x[Object.keys(x)[i++]] - 2.5; })
             .attr('y', 0)
-
     }
 
     mapInit(mapJson, mapObj);
