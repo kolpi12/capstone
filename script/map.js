@@ -216,7 +216,7 @@ function documentInit(boxId, mapJson, mapObj) {
                     setTooltip(prop.SIG_KOR_LN, prop.ADM_DR_NM, prop.EMD_HJ_CD, dong[prop.EMD_HJ_CD].getHourPop(timeSlider.value));
                 })
                 .on('mouseout', function(d) {
-                    setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked.getHourPop(timeSlider.value));
+                    setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked['hourPop'][timeSlider.value]);
                 });
             d3.select('#c' + checked['dongHjCode']).attr('class', 'checked');
         });
