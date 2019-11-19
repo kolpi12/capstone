@@ -91,16 +91,16 @@ function documentInit(boxId, mapJson, mapObj) {
 
     function changeFeatureColor() {
         mapSvg.selectAll('path')
-            .attr('fill', function(d) { return color(dong[d.properties.EMD_HJ_CD].getHourPop(timeSlider.value)); });
+            .attr('fill', function(d) { return color(dong[d.properties.EMD_HJ_CD].getHourPop(+timeSlider.value)); });
         guSvg.selectAll('path')
-            .attr('fill', function(d) { return color2(gu[d.properties.SIG_HJ_CD].outPop[timeSlider.value][checked.dongHjCode]) })
+            .attr('fill', function(d) { return color2(gu[d.properties.SIG_HJ_CD].outPop[+timeSlider.value][checked.dongHjCode]) });
     }
 
     function changeBaseTime(time) {
         d3.select('#time_slider').property('value', time);
         changeFeatureColor();
-        pop.innerText = dong[hjCode.innerText].getHourPop(timeSlider.value);
-        document.querySelector('#time').innerText = `${pad(timeSlider.value, 2)}시`;
+        pop.innerText = dong[hjCode.innerText].getHourPop(+timeSlider.value);
+        document.querySelector('#time').innerText = `${pad(+timeSlider.value, 2)}시`;
     }
 
     // 구 초기화
@@ -153,12 +153,21 @@ function documentInit(boxId, mapJson, mapObj) {
                 const data = d[index];
                 if(gu[data['대도시권거주지코드']] === undefined) {}
                 else {
+                    for (let age = 10; age < 80; age += 5) {
+                        let ageM = data[`남자${age}세부터${age+4}세생활인구수`];
+                        let ageF = data[`여자${age}세부터${age+4}세생활인구수`];
+                        if(ageM === '*') { ageM = 1; }
+                        if(ageF === '*') { ageF = 1; }
+                        dong[data['행정동코드']]['male'][+data['시간대구분']][age] += +ageM;
+                        dong[data['행정동코드']]['female'][+data['시간대구분']][age] += +ageF;
+                    }
                     gu[data['대도시권거주지코드']]['outPop'][+data['시간대구분']][data['행정동코드']] += +data['총생활인구수'];
-                    dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수'])
+                    dong[data['행정동코드']].plusHourPop(+data['시간대구분'], +data['총생활인구수']);
                 }
             }
             changeFeatureColor();
             checked = dong['11110515'];
+            allGender();
         })
     }
 
@@ -180,7 +189,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 .attr('id', function(d) { return 'c' + d.properties.SIG_HJ_CD; })
                 .on('mouseover', function(d) {
                     d3.select(this).raise();
-                    setOutTooltip(d.properties.SIG_KOR_LN, gu[d.properties.SIG_HJ_CD]['outPop'][timeSlider.value][checked.dongHjCode])
+                    setOutTooltip(d.properties.SIG_KOR_LN, gu[d.properties.SIG_HJ_CD]['outPop'][+timeSlider.value][checked.dongHjCode])
                 })
             d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
         });
@@ -209,14 +218,15 @@ function documentInit(boxId, mapJson, mapObj) {
                     d3.select(this).raise().attr('class', 'checked');
                     d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
                     changeFeatureColor();
+                    allGender();
                 })
                 .on('mouseover', function(d) {
                     d3.select(this).raise();
                     let prop = d.properties;
-                    setTooltip(prop.SIG_KOR_LN, prop.ADM_DR_NM, prop.EMD_HJ_CD, dong[prop.EMD_HJ_CD].getHourPop(timeSlider.value));
+                    setTooltip(prop.SIG_KOR_LN, prop.ADM_DR_NM, prop.EMD_HJ_CD, dong[prop.EMD_HJ_CD].getHourPop(+timeSlider.value));
                 })
                 .on('mouseout', function(d) {
-                    setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked['hourPop'][timeSlider.value]);
+                    setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked['hourPop'][+timeSlider.value]);
                 });
             d3.select('#c' + checked['dongHjCode']).attr('class', 'checked');
         });
@@ -255,6 +265,42 @@ function documentInit(boxId, mapJson, mapObj) {
             .attr('text-anchor', 'middle')
             .attr('x', function(d) { return x[Object.keys(x)[i++]] - 2.5; })
             .attr('y', 0)
+    }
+
+    // 전체 성별 차트
+    function allGender() {
+        let domain = [];
+        ['M', 'F'].forEach(g => { for (let i = 10; i < 80; i += 5) { domain.push(`${g}${i}`) } });
+        let width = 600,
+        height = 200,
+        margin = {top: 20, right: 10, bottom: 20, left: 10},
+        svg = d3.select('#gender').attr('width', width).attr('height', height),
+        x = d3.scaleBand().domain(domain).range([margin.left, width - margin.right]).padding(0.1),
+        y = d3.scaleLinear().domain([0, 15000]).range([height - margin.bottom, margin.top]).nice(),
+        data = [];
+        ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
+            data.push({gender: g, age: i, value: checked[g.toLowerCase()][timeSlider.value][i]})}});
+        let xAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(x));
+        svg.append('g').attr('class', 'xAxis').call(xAxis)
+        let update = function() {
+            let bars = svg.selectAll('.chart').data(data);
+            bars.enter()
+                .append('rect')
+                .attr('class', 'chart')
+                .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
+                .attr('x', function(d){ return x(`${d.gender.slice(0,1)}${d.age}`); })
+                .attr('y', function(d){ return y(d.value); })
+                .attr('width', x.bandwidth())
+                .attr('height', function(d){ return y(0) - y(d.value) })
+                .on('mouseover', function(d){ document.querySelector('#chart_value').innerText = d.value; });
+            
+            bars.transition().duration(250)
+                .attr('y', function(d){ return y(d.value); })
+                .attr('height', function(d){ return y(0) - y(d.value); })
+            
+            bars.exit().remove();
+        }
+        update();
     }
 
     mapInit(mapJson, mapObj);
