@@ -4,19 +4,21 @@
     display: block;
 }
 
-#main_map {
+#main_map, #gu_map {
+    border: 1px solid black;
     float: left;
 }
 
 #name_box {
     float: left;
-    margin: 0 0 0 10px;
+    margin: 10px;
 }
+
 #name_box h3 {
     display: inline;
 }
 
-#dong_label, #gu_label {
+#dong_label {
     margin: 0 0 10px 0;
     float: left;
 }

@@ -28,8 +28,8 @@ function documentInit(boxId, mapJson, mapObj) {
     var gu = {};
     dongInit();
     guInit();
-    const WIDTH = 970,
-    HEIGHT = 800;
+    const WIDTH = 750,
+    HEIGHT = 600;
     var svg = d3.select(boxId).append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT);
@@ -37,8 +37,8 @@ function documentInit(boxId, mapJson, mapObj) {
     var guSvg = d3.select('#gu_map').append('svg').attr('height', WIDTH*2/3).attr('width', HEIGHT*2/3+50)
         .append('g').attr('id', 'guMap');
     var mapSvg = svg.append('g').attr('id', 'map');
-    var guName = document.querySelector('#gu_nm > h3');
-    var dongName = document.querySelector('#dong_nm > h3');
+    var guName = document.querySelector('#gu_nm');
+    var dongName = document.querySelector('#dong_nm');
     var hjCode = document.querySelector('#hj_cd > h3');
     var pop = document.querySelector('#pop > h3');
     var timeSlider = document.querySelector('#time_slider');
@@ -144,8 +144,8 @@ function documentInit(boxId, mapJson, mapObj) {
         d3.json(mapJson).then(function(d) {
             let mapData = topojson.feature(d, d.objects[mapObj]);
             let center = d3.geoCentroid(mapData);
-            center[0] += 0.5; center[1] -= 0.15;
-            let scale = 19000;
+            center[0] += 0.47; center[1] -= 0.10;
+            let scale = 15500;
             let projection = d3.geoMercator().translate([WIDTH/2, HEIGHT/2])
                 .scale(scale).center(center);
             let path = d3.geoPath().projection(projection);
@@ -169,7 +169,7 @@ function documentInit(boxId, mapJson, mapObj) {
             let mapData = topojson.feature(d, d.objects[mapObj]);
             let center = d3.geoCentroid(mapData);
             center[0] -= 0.015; center[1] += 0.015;
-            let scale = 130000;
+            let scale = 98000;
             let projection = d3.geoMercator().translate([WIDTH/2, HEIGHT/2])
                 .scale(scale).center(center);
             let path = d3.geoPath().projection(projection);
