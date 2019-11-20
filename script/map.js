@@ -127,7 +127,10 @@ function documentInit(boxId, mapJson, mapObj) {
                 let data = d[index];
                 dong[data.H_DNG_CD] = new Dong(data.H_DNG_CD, data.CT_NM, data.H_DNG_NM);
             }
-            changeBaseTime(12);
+            d3.select('#time_slider').property('value', 12);
+            changeFeatureColor();
+            pop.innerText = dong[hjCode.innerText].getHourPop(+timeSlider.value);
+            document.querySelector('#time').innerText = `${pad(+timeSlider.value, 2)}시`;
         });
     }
 
@@ -267,9 +270,8 @@ function documentInit(boxId, mapJson, mapObj) {
             .attr('x', function(d) { return x[Object.keys(x)[i++]] - 2.5; })
             .attr('y', 0)
     }
-
-    // 전체 성별 차트
-    function allGender() {
+    {
+        // 전체 성별 차트
         let domain = [];
         ['M', 'F'].forEach(g => { for (let i = 10; i < 80; i += 5) { domain.push(`${g}${i}`) } });
         let width = 600,
@@ -278,30 +280,33 @@ function documentInit(boxId, mapJson, mapObj) {
         svg = d3.select('#gender').attr('width', width).attr('height', height),
         x = d3.scaleBand().domain(domain).range([margin.left, width - margin.right]).padding(0.1),
         y = d3.scaleLinear().domain([0, 15000]).range([height - margin.bottom, margin.top]).nice(),
-        data = [];
-        ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
-            data.push({gender: g, age: i, value: checked[g.toLowerCase()][timeSlider.value][i]})}});
-        let xAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(x));
-        svg.append('g').attr('class', 'xAxis').call(xAxis)
-        let update = function() {
-            let bars = svg.selectAll('.chart').data(data);
-            bars.enter()
-                .append('rect')
-                .attr('class', 'chart')
-                .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
-                .attr('x', function(d){ return x(`${d.gender.slice(0,1)}${d.age}`); })
-                .attr('y', function(d){ return y(d.value); })
-                .attr('width', x.bandwidth())
-                .attr('height', function(d){ return y(0) - y(d.value) })
-                .on('mouseover', function(d){ document.querySelector('#chart_value').innerText = d.value; });
-            
-            bars.transition().duration(250)
-                .attr('y', function(d){ return y(d.value); })
-                .attr('height', function(d){ return y(0) - y(d.value); })
-            
-            bars.exit().remove();
+        xAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(x));
+        svg.append('g').attr('class', 'xAxis').call(xAxis);
+        function allGender() {
+            data = [];
+            ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
+                data.push({gender: g, age: i, value: checked[g.toLowerCase()][timeSlider.value][i]})}});
+
+            let update = function() {
+                let bars = svg.selectAll('.chart').data(data);
+                bars.enter()
+                    .append('rect')
+                    .attr('class', 'chart')
+                    .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
+                    .attr('x', function(d){ return x(`${d.gender.slice(0,1)}${d.age}`); })
+                    .attr('y', function(d){ return y(d.value); })
+                    .attr('width', x.bandwidth())
+                    .attr('height', function(d){ return y(0) - y(d.value) })
+                    .on('mouseover', function(d){ document.querySelector('#chart_value').innerText = d.value; });
+
+                bars.transition().duration(250)
+                    .attr('y', function(d){ return y(d.value); })
+                    .attr('height', function(d){ return y(0) - y(d.value); })
+
+                bars.exit().remove();
+            }
+            update();
         }
-        update();
     }
 
     mapInit(mapJson, mapObj);
