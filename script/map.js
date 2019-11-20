@@ -101,6 +101,7 @@ function documentInit(boxId, mapJson, mapObj) {
         changeFeatureColor();
         pop.innerText = dong[hjCode.innerText].getHourPop(+timeSlider.value);
         document.querySelector('#time').innerText = `${pad(+timeSlider.value, 2)}시`;
+        allGender();
     }
 
     // 구 초기화
