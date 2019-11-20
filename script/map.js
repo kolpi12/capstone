@@ -48,7 +48,7 @@ function documentInit(boxId, mapJson, mapObj) {
     var svg = d3.select(boxId).append('svg')
         .attr('width', WIDTH)
         .attr('height', HEIGHT);
-    var checked = {dongHjCode:11110515};
+    var checked = new Dong(11110515, '종로구', '청운효자동');
     var guSvg = d3.select('#gu_map').append('svg').attr('height', WIDTH*2/3).attr('width', HEIGHT*2/3+50)
         .append('g').attr('id', 'guMap');
     var mapSvg = svg.append('g').attr('id', 'map');
@@ -102,6 +102,8 @@ function documentInit(boxId, mapJson, mapObj) {
         pop.innerText = dong[hjCode.innerText].getHourPop(+timeSlider.value);
         document.querySelector('#time').innerText = `${pad(+timeSlider.value, 2)}시`;
         allGender();
+        allAge();
+        d3.select('#age').selectAll('.chart').attr('stroke', d => timeSlider.value == d.time ? 'black' : 'rgba(150,150,150,0.5)')
     }
 
     // 구 초기화
@@ -127,10 +129,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 let data = d[index];
                 dong[data.H_DNG_CD] = new Dong(data.H_DNG_CD, data.CT_NM, data.H_DNG_NM);
             }
-            d3.select('#time_slider').property('value', 12);
-            changeFeatureColor();
-            pop.innerText = dong[hjCode.innerText].getHourPop(+timeSlider.value);
-            document.querySelector('#time').innerText = `${pad(+timeSlider.value, 2)}시`;
+            changeBaseTime();
         });
     }
 
@@ -172,6 +171,7 @@ function documentInit(boxId, mapJson, mapObj) {
             changeFeatureColor();
             checked = dong['11110515'];
             allGender();
+            allAge()
         })
     }
 
@@ -223,6 +223,7 @@ function documentInit(boxId, mapJson, mapObj) {
                     d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
                     changeFeatureColor();
                     allGender();
+                    allAge();
                 })
                 .on('mouseover', function(d) {
                     d3.select(this).raise();
@@ -287,25 +288,64 @@ function documentInit(boxId, mapJson, mapObj) {
             ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
                 data.push({gender: g, age: i, value: checked[g.toLowerCase()][timeSlider.value][i]})}});
 
-            let update = function() {
-                let bars = svg.selectAll('.chart').data(data);
-                bars.enter()
-                    .append('rect')
-                    .attr('class', 'chart')
-                    .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
-                    .attr('x', function(d){ return x(`${d.gender.slice(0,1)}${d.age}`); })
-                    .attr('y', function(d){ return y(d.value); })
-                    .attr('width', x.bandwidth())
-                    .attr('height', function(d){ return y(0) - y(d.value) })
-                    .on('mouseover', function(d){ document.querySelector('#chart_value').innerText = d.value; });
+            let bars = svg.selectAll('.chart').data(data);
+            bars.enter()
+                .append('rect')
+                .attr('class', 'chart')
+                .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
+                .attr('x', d => x(`${d.gender.slice(0,1)}${d.age}`))
+                .attr('y', d => y(d.value))
+                .attr('width', x.bandwidth())
+                .attr('height', d => y(0) - y(d.value))
+                .on('mouseover', d => document.querySelector('#chart_value').innerText = d.value);
 
-                bars.transition().duration(250)
-                    .attr('y', function(d){ return y(d.value); })
-                    .attr('height', function(d){ return y(0) - y(d.value); })
+            bars.transition().duration(500)
+                .attr('y', d => y(d.value))
+                .attr('height', d => y(0) - y(d.value))
 
-                bars.exit().remove();
+            bars.exit().remove();
+        }
+    }
+    {
+        // 전체 연령 차트
+        let domainAge = [],
+        domainTime = [];
+        for(let index = 10; index < 80; index += 5) { domainAge.push(index) }
+        for(let index = 0; index < 24; index++) { domainTime.push(index) }
+        let width = 500,
+        height = 300,
+        margin = {top: 20, right: 20, bottom: 20, left: 20},
+        svg = d3.select('#age').attr('width', width).attr('height', height),
+        x = d3.scaleBand().domain(domainTime).range([margin.left, width - margin.right]).padding(0.1),
+        y = d3.scaleBand().domain(domainAge).range([height - margin.bottom, margin.top]).padding(0.1),
+        ageColor = d3.scaleLinear().domain([0,5000]).range(['#fee8c8', '#d7301f']),
+        xAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(x)),
+        yAxis = g => g.attr('transform', `translate(${margin.left}, 0)`).call(d3.axisLeft(y));
+        svg.append('g').attr('class', 'xAxis').call(xAxis);
+        svg.append('g').attr('class', 'yAxis').call(yAxis);
+        function allAge() {
+            data = [];
+            for (let age = 10; age < 80; age += 5) {
+                for (let time = 0; time < 24; time++) {
+                    data.push({'time': time, 'age': age, value: checked.male[time][age] + checked.female[time][age]})
+                }
             }
-            update();
+            let rects = svg.selectAll('.chart').data(data)
+            rects.enter()
+                .append('rect')
+                .attr('class', 'chart')
+                .attr('stroke', d => d.time == timeSlider.value ? 'black' : 'rgba(150,150,150,0.65)')
+                .attr('fill', d => ageColor(d.value))
+                .attr('x', d => x(d.time))
+                .attr('y', d => y(d.age))
+                .attr('width', 15)
+                .attr('height', 15);
+                // .on('mouseover');
+
+            rects.transition().duration(500)
+                .attr('fill', d => ageColor(d.value));
+
+            rects.exit().remove();
         }
     }
 
