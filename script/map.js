@@ -49,6 +49,7 @@ function documentInit(boxId, mapJson, mapObj) {
         .attr('width', WIDTH)
         .attr('height', HEIGHT);
     var checked = new Dong(11110515, '종로구', '청운효자동');
+    var guChecked = new Gu(11110, '종로구')
     var guSvg = d3.select('#gu_map').append('svg').attr('height', WIDTH*2/3).attr('width', HEIGHT*2/3+50)
         .append('g').attr('id', 'guMap');
     var mapSvg = svg.append('g').attr('id', 'map');
@@ -196,6 +197,11 @@ function documentInit(boxId, mapJson, mapObj) {
                     setOutTooltip(d.properties.SIG_KOR_LN, gu[d.properties.SIG_HJ_CD]['outPop'][+timeSlider.value][checked.dongHjCode])
                 })
             d3.select('#c' + parseInt(checked['dongHjCode']/1000)).raise().attr('class', 'checked');
+            guSvg.append('text')
+                .attr('x', 10)
+                .attr('y', 25)
+                .attr('style', 'font-size: 20;')
+                .html('유출지 지도')
         });
     }
 
@@ -234,6 +240,11 @@ function documentInit(boxId, mapJson, mapObj) {
                     setTooltip(checked['guName'], checked['dongName'], checked['dongHjCode'], checked['hourPop'][+timeSlider.value]);
                 });
             d3.select('#c' + checked['dongHjCode']).attr('class', 'checked');
+            mapSvg.append('text')
+                .attr('x', 10)
+                .attr('y', 25)
+                .attr('style', 'font-size: 20;')
+                .html('서울시 유동인구 지도')
         });
     }
 
@@ -247,11 +258,11 @@ function documentInit(boxId, mapJson, mapObj) {
             x[element] = i * (boxLength + margin);
             i++;
         });
-        let legend = d3.select('#legends')
-            .append('svg')
+        let inLegend = d3.select('#in_pop_legend')
             .attr('width', (boxLength + margin) * 9 + 20)
+            .attr('height', 80)
             .append('g');
-        legend.selectAll('rect')
+        inLegend.selectAll('rect')
             .data(color.range()).enter()
             .append('rect')
             .attr('transform', 'translate(20, 10)')
@@ -262,8 +273,33 @@ function documentInit(boxId, mapJson, mapObj) {
             .attr('height', boxLength / 2);
         
         i = 1;
-        legend.selectAll('text')
+        inLegend.selectAll('text')
             .data(color.domain()).enter()
+            .append('text')
+            .html(function(d) { return d; })
+            .attr('transform', 'translate(20, 55)')
+            .attr('text-anchor', 'middle')
+            .attr('x', function(d) { return x[Object.keys(x)[i++]] - 2.5; })
+            .attr('y', 0)
+        
+        let outLegend = d3.select('#out_pop_legend')
+            .attr('width', (boxLength + margin) * 9 + 20)
+            .append('g');
+            
+        outLegend.selectAll('rect')
+            .data(color2.range()).enter()
+            .append('rect')
+            .attr('transform', 'translate(20, 10)')
+            .attr('height', 80)
+            .attr('fill', d => { return d; })
+            .attr('x', d => { return x[d]; })
+            .attr('y', 0)
+            .attr('width', boxLength)
+            .attr('height', boxLength / 2);
+
+        i = 1;
+        outLegend.selectAll('text')
+            .data(color2.domain()).enter()
             .append('text')
             .html(function(d) { return d; })
             .attr('transform', 'translate(20, 55)')

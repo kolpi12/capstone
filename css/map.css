@@ -11,6 +11,11 @@ path:hover {
     stroke-width: 3;
 }
 
+#main_map, #gu_map {
+    text-anchor: start;
+    
+}
+
 /* 
 #map path:hover {
     fill: orange;
