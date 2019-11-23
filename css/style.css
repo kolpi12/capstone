@@ -4,28 +4,55 @@
     display: block;
 }
 
-#main_map, #gu_map {
-    border: 1px solid black;
-    float: left;
-}
-
-#name_box {
-    float: left;
-    margin: 10px;
-}
-
-#name_box h3 {
-    display: inline;
-}
-
-#dong_label {
-    margin: 0 0 10px 0;
-}
-
 h3 {
     margin: 0;
 }
 
+#side {
+    border-right: solid 3px black;
+    float: left;
+}
+
+#chart {
+    border-top: solid 3px black;
+    border-bottom: solid 3px black;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+#gu_map {
+    width: fit-content;
+    border: 1px solid black;
+}
+
+#label {
+    float: left;
+    margin: 10px 5px 0 0;
+}
+
+#label h3 {
+    display: inline;
+}
+
+#label input {
+    width: 200px;
+}
+
+#gender_box {
+    float: left;
+}
+
+#content {
+    margin-left: 10px;
+    float: left;
+}
+
+#main_map {
+    border: 1px solid black;
+}
+
 #legends {
-    clear: left;
+    margin: 10px;
+    width: fit-content;
+    height: fit-content;
 }

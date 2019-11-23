@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <base href="https://kolpi12.github.io/capstone/">
+    <base href="http://localhost:8000/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -14,32 +14,37 @@
     <script src="script/map.js"></script>
 </head>
 <body onload="documentInit('#main_map', 'json/3_EMD.json', '3_EMD')">
-    
-    <div id="name_box">
-        <div id="dong_label">
-            <h3 id="gu_nm"></h3>
-            <h3 id="dong_nm"></h3>
-            <div>기준 시각 : <span id="time"></span> <input type="range" id="time_slider" min="0" max="23" value="12"></div>
-            <div id="hj_cd">행정동 코드 : <h3></h3></div>
-            <div id="pop">인구수 : <h3></h3></div>
-        </div>
-        <div id="gu_label">
-            <div id="out_gu_nm">유출지 : <h3></h3></div>
-            <div id="out_pop">유출 인구수 : <h3></h3></div>
-        </div>
-        <div>현재 차트의 값 : <h3 id="chart_value"></h3></div>
-        <div id="charts">
-            <div><svg id="gender"></svg></div>
+    <div class="clearfix">
+        <div id="side">
+            <div id="gu_map"></div>
+            <div id="chart" class="clearfix">
+                <div id="label">
+                    <h3><span id="gu_nm"></span> <span id="dong_nm"></span></h3>
+                    <div>기준 시각 : <span id="time"></span><br>
+                    <input type="range" id="time_slider" min="0" max="23" value="12"></div>
+                    <div>행정동 코드 : <h3 id="hj_cd"></h3></div>
+                    <div>인구수 : <h3 id="pop"></h3></div>
+                    <div>유출지 : <h3 id="out_gu_nm"></h3></div>
+                    <div>유출 인구수 : <h3 id="out_pop"></h3></div>
+                    <div>현재 차트의 값 : <h3 id="chart_value"></h3></div>
+                </div>
+                <div id="gender_box">
+                    <svg id="male"></svg><br>
+                    <svg id="female"></svg><br>
+                    <!-- <svg id="line"></svg> -->
+                </div>
+            </div>
             <div><svg id="age"></svg></div>
         </div>
-    </div>
-    <div id="main_map"></div>
-    <div id="gu_map"></div>
-    <div id="legends">
-        <h3>유입 인구수 범례</h3>
-        <svg id="in_pop_legend"></svg>
-        <h3>유출 인구수 범례</h3>
-        <svg id="out_pop_legend"></svg>
+        <div id="content">
+            <div id="main_map"></div>
+            <div id="legends">
+                <h3>유입 인구수 범례</h3>
+                <svg id="in_pop_legend"></svg>
+                <h3>유출 인구수 범례</h3>
+                <svg id="out_pop_legend"></svg>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -55,11 +55,11 @@ function documentInit(boxId, mapJson, mapObj) {
     var mapSvg = svg.append('g').attr('id', 'map');
     var guName = document.querySelector('#gu_nm');
     var dongName = document.querySelector('#dong_nm');
-    var hjCode = document.querySelector('#hj_cd > h3');
-    var pop = document.querySelector('#pop > h3');
+    var hjCode = document.querySelector('#hj_cd');
+    var pop = document.querySelector('#pop');
     var timeSlider = document.querySelector('#time_slider');
-    var outGuName = document.querySelector('#out_gu_nm > h3');
-    var outPop = document.querySelector('#out_pop > h3');
+    var outGuName = document.querySelector('#out_gu_nm');
+    var outPop = document.querySelector('#out_pop');
     setTooltip('종로구', '청운효자동', 11110515, 12345);
     d3.select('#time_slider').on('input', function() { changeBaseTime(+this.value); });
     var color = d3.scaleThreshold()
@@ -309,37 +309,59 @@ function documentInit(boxId, mapJson, mapObj) {
     }
     {
         // 전체 성별 차트
-        let domain = [];
-        ['M', 'F'].forEach(g => { for (let i = 10; i < 80; i += 5) { domain.push(`${g}${i}`) } });
-        let width = 600,
-        height = 200,
+        let maleDomain = [], femaleDomain = [];
+        for (let i = 10; i < 80; i += 5) { maleDomain.push(`M${i}`); femaleDomain.push(`F${i}`); }
+        let width = 400,
+        height = 100,
         margin = {top: 20, right: 10, bottom: 20, left: 10},
-        svg = d3.select('#gender').attr('width', width).attr('height', height),
-        x = d3.scaleBand().domain(domain).range([margin.left, width - margin.right]).padding(0.1),
+        maleSvg = d3.select('#male').attr('width', width).attr('height', height),
+        femaleSvg = d3.select('#female').attr('width', width).attr('height', height),
+        mx = d3.scaleBand().domain(maleDomain).range([margin.left, width - margin.right]).padding(0.1),
+        fx = d3.scaleBand().domain(femaleDomain).range([margin.left, width - margin.right]).padding(0.1),
         y = d3.scaleLinear().domain([0, 15000]).range([height - margin.bottom, margin.top]).nice(),
-        xAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(x));
-        svg.append('g').attr('class', 'xAxis').call(xAxis);
-        function allGender() {
-            data = [];
-            ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
-                data.push({gender: g, age: i, value: checked[g.toLowerCase()][timeSlider.value][i]})}});
+        mxAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(mx)),
+        fxAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(fx));
+        maleSvg.append('g').attr('class', 'xAxis').call(mxAxis),
+        femaleSvg.append('g').attr('class', 'xAxis').call(fxAxis);
 
-            let bars = svg.selectAll('.chart').data(data);
-            bars.enter()
+        
+
+        function allGender() {
+            maleData = [], femaleData = [];
+            ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
+                g == 'Male' ? maleData.push({age: i, value: checked[g.toLowerCase()][timeSlider.value][i]}) :
+                femaleData.push({age: i, value: checked[g.toLowerCase()][timeSlider.value][i]});
+            }});
+
+            let maleBars = maleSvg.selectAll('.chart').data(maleData);
+            let femaleBars = femaleSvg.selectAll('.chart').data(femaleData);
+            maleBars.enter()
                 .append('rect')
                 .attr('class', 'chart')
-                .attr('fill', d => d.gender == 'Male' ? 'steelblue' : 'tomato')
-                .attr('x', d => x(`${d.gender.slice(0,1)}${d.age}`))
+                .attr('fill', 'steelblue')
+                .attr('x', d => mx(`M${d.age}`))
                 .attr('y', d => y(d.value))
-                .attr('width', x.bandwidth())
+                .attr('width', mx.bandwidth())
+                .attr('height', d => y(0) - y(d.value))
+                .on('mouseover', d => document.querySelector('#chart_value').innerText = d.value);
+            femaleBars.enter()
+                .append('rect')
+                .attr('class', 'chart')
+                .attr('fill', 'tomato')
+                .attr('x', d => fx(`F${d.age}`))
+                .attr('y', d => y(d.value))
+                .attr('width', fx.bandwidth())
                 .attr('height', d => y(0) - y(d.value))
                 .on('mouseover', d => document.querySelector('#chart_value').innerText = d.value);
 
-            bars.transition().duration(500)
+            maleBars.transition().duration(500)
                 .attr('y', d => y(d.value))
                 .attr('height', d => y(0) - y(d.value))
-
-            bars.exit().remove();
+            femaleBars.transition().duration(500)
+                .attr('y', d => y(d.value))
+                .attr('height', d => y(0) - y(d.value))
+            maleBars.exit().remove();
+            femaleBars.exit().remove();
         }
     }
     {
