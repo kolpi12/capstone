@@ -309,59 +309,40 @@ function documentInit(boxId, mapJson, mapObj) {
     }
     {
         // 전체 성별 차트
-        let maleDomain = [], femaleDomain = [];
-        for (let i = 10; i < 80; i += 5) { maleDomain.push(`M${i}`); femaleDomain.push(`F${i}`); }
+        let domain = [];
+        for (let i = 10; i < 80; i += 5) { domain.push(i) }
         let width = 400,
-        height = 100,
-        margin = {top: 20, right: 10, bottom: 20, left: 10},
-        maleSvg = d3.select('#male').attr('width', width).attr('height', height),
-        femaleSvg = d3.select('#female').attr('width', width).attr('height', height),
-        mx = d3.scaleBand().domain(maleDomain).range([margin.left, width - margin.right]).padding(0.1),
-        fx = d3.scaleBand().domain(femaleDomain).range([margin.left, width - margin.right]).padding(0.1),
-        y = d3.scaleLinear().domain([0, 15000]).range([height - margin.bottom, margin.top]).nice(),
-        mxAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(mx)),
-        fxAxis = g => g.attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(fx));
-        maleSvg.append('g').attr('class', 'xAxis').call(mxAxis),
-        femaleSvg.append('g').attr('class', 'xAxis').call(fxAxis);
-
-        
+        height = 230,
+        margin = {top: 10, right: 10, bottom: 10, left: 10},
+        svg = d3.select('#gender_box').append('svg').attr('width', width).attr('height', height)
+        svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`),
+        x = d3.scaleBand().range([0, width - margin.left - margin.right]).padding(0.1).domain(domain),
+        y = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]).domain([0, 15000]),
+        xAxis = d3.axisBottom().scale(x);
+        svg.append('g').attr('transform', `translate(0, ${height - margin.top - margin.bottom})`).attr('class', 'gender_xAxis')
+            .call(xAxis);
 
         function allGender() {
-            maleData = [], femaleData = [];
-            ['Male', 'Female'].forEach(g => { for (let i = 10; i < 80; i += 5) {
-                g == 'Male' ? maleData.push({age: i, value: checked[g.toLowerCase()][timeSlider.value][i]}) :
-                femaleData.push({age: i, value: checked[g.toLowerCase()][timeSlider.value][i]});
-            }});
+            let mData = [], fData = [];
+            for(let age = 10; age < 80; age += 5){
+                mData.push({'age': age, value: checked['male'][timeSlider.value][age]});
+                fData.push({'age': age, value: checked['female'][timeSlider.value][age]});
+            }
+            
+            let line = d3.line()
+                .x(d => x(d.age))
+                .y(d => y(d.value))
+                .curve(d3.curveMonotoneX);
 
-            let maleBars = maleSvg.selectAll('.chart').data(maleData);
-            let femaleBars = femaleSvg.selectAll('.chart').data(femaleData);
-            maleBars.enter()
-                .append('rect')
-                .attr('class', 'chart')
-                .attr('fill', 'steelblue')
-                .attr('x', d => mx(`M${d.age}`))
-                .attr('y', d => y(d.value))
-                .attr('width', mx.bandwidth())
-                .attr('height', d => y(0) - y(d.value))
-                .on('mouseover', d => document.querySelector('#chart_value').innerText = d.value);
-            femaleBars.enter()
-                .append('rect')
-                .attr('class', 'chart')
-                .attr('fill', 'tomato')
-                .attr('x', d => fx(`F${d.age}`))
-                .attr('y', d => y(d.value))
-                .attr('width', fx.bandwidth())
-                .attr('height', d => y(0) - y(d.value))
-                .on('mouseover', d => document.querySelector('#chart_value').innerText = d.value);
-
-            maleBars.transition().duration(500)
-                .attr('y', d => y(d.value))
-                .attr('height', d => y(0) - y(d.value))
-            femaleBars.transition().duration(500)
-                .attr('y', d => y(d.value))
-                .attr('height', d => y(0) - y(d.value))
-            maleBars.exit().remove();
-            femaleBars.exit().remove();
+            let m = svg.selectAll('.male').data([mData], d => d.age);
+            let f = svg.selectAll('.female').data([fData], d => d.age);
+            
+            m.enter().append('path').attr('class', 'male')
+                .merge(m).transition().duration(500).attr('d', line).attr('fill', 'none').attr('stroke', 'steelblue')
+                .attr('stroke-width', 3).attr('stroke-opacity', 0.8);
+            f.enter().append('path').attr('class', 'female')
+                .merge(f).transition().duration(500).attr('d', line).attr('fill', 'none').attr('stroke', 'tomato')
+                .attr('stroke-width', 3).attr('stroke-opacity', 0.8);
         }
     }
     {
