@@ -56,3 +56,10 @@ h3 {
     width: fit-content;
     height: fit-content;
 }
+
+#setting {
+    float: left;
+    border-left: 3px black solid;
+    margin-left: 10px;
+    height: 100%;
+}

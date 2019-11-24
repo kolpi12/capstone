@@ -41,8 +41,7 @@ function documentInit(boxId, mapJson, mapObj) {
     // 각종 변수 초기화
     var dong = {};
     var gu = {};
-    dongInit();
-    guInit();
+    floatingPopInit('2019', '11', '01');
     const WIDTH = 750,
     HEIGHT = 600;
     var svg = d3.select(boxId).append('svg')
@@ -62,6 +61,7 @@ function documentInit(boxId, mapJson, mapObj) {
     var outPop = document.querySelector('#out_pop');
     setTooltip('종로구', '청운효자동', 11110515, 12345);
     d3.select('#time_slider').on('input', function() { changeBaseTime(+this.value); });
+    d3.select('#date').on('input', function() { changeBaseDate(this.value) })
     var color = d3.scaleThreshold()
         .domain([2000,4000,6000,8000,10000,20000,50000])
         .range(d3.schemeYlOrBr[8]);
@@ -107,6 +107,19 @@ function documentInit(boxId, mapJson, mapObj) {
         d3.select('#age').selectAll('.chart').attr('stroke', d => timeSlider.value == d.time ? 'black' : 'rgba(150,150,150,0.5)')
     }
 
+    let noDate = {'2019-09-02': false, '2019-09-03': false, '2019-10-15': false, '2019-10-16': false, '2019-10-17': false,
+    '2019-10-18': false, '2019-10-19': false, '2019-10-20': false, '2019-10-21': false, '2019-10-22': false, '2019-10-23': false,
+    '2019-10-24': false, '2019-10-25': false, '2019-10-26': false, '2019-10-27': false, '2019-10-28': false, '2019-10-29': false,
+    '2019-10-30': false}
+    function changeBaseDate(date) {
+        if (date in noDate) {
+            d3.select('#dateError').html('데이터가 없습니다. 다른 날짜를 선택하세요.')
+        } else {
+            floatingPopInit(date.slice(0,4), date.slice(5,7), date.slice(8, 10))
+            d3.select('#dateError').html('')
+        }
+    }
+
     // 구 초기화
     function guInit() {
         d3.json('json/gu_cd.json').then(function(d) {
@@ -135,8 +148,12 @@ function documentInit(boxId, mapJson, mapObj) {
     }
 
     // 동 유동인구 초기화
-    function floatingPopInit() {
-        d3.csv('data/floating_pop/INNER_PEOPLE_20191101.csv').then(function(d) {
+    function floatingPopInit(year, month, day) {
+        if(Object.keys(dong).length === 0 && dong.constructor === Object) {for(const index in dong){if (dong.hasOwnProperty(index)){delete dong[index]}}}
+        dongInit();
+        if(Object.keys(gu).length === 0 && gu.constructor === Object) {for(const index in gu){if (gu.hasOwnProperty(index)){delete gu[index]}}}
+        guInit();
+        d3.csv(`data/floating_pop/INNER_PEOPLE_${year}${month}${day}.csv`).then(function(d) {
             for (let index = 0; index < d.length; index++) {
                 let data = d[index];
                 data['총생활인구수'] = Math.round(data['총생활인구수']);
@@ -152,7 +169,7 @@ function documentInit(boxId, mapJson, mapObj) {
                 gu[data['거주지 자치구 코드']]['outPop'][+data['시간대구분']][data['행정동코드']] += +data['총생활인구수'];
             }
         });
-        d3.csv('data/floating_pop/METRO_PEOPLE_20191101.csv').then(function(d) {
+        d3.csv(`data/floating_pop/METRO_PEOPLE_${year}${month}${day}.csv`).then(function(d) {
             for (let index = 0; index < d.length; index++) {
                 const data = d[index];
                 if(gu[data['대도시권거주지코드']] === undefined) {}
@@ -390,7 +407,7 @@ function documentInit(boxId, mapJson, mapObj) {
 
     mapInit(mapJson, mapObj);
     guMapInit('json/2_SIG.json', '2_SIG');
-    floatingPopInit();
+    
     legends();
 }
 
