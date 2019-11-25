@@ -332,13 +332,13 @@ function documentInit(boxId, mapJson, mapObj) {
         height = 230,
         margin = {top: 10, right: 10, bottom: 10, left: 10},
         svg = d3.select('#gender_box').append('svg').attr('width', width).attr('height', height)
-        svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`),
         x = d3.scaleBand().range([0, width - margin.left - margin.right]).padding(0.1).domain(domain),
         y = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]).domain([0, 15000]),
         xAxis = d3.axisBottom().scale(x);
         svg.append('g').attr('transform', `translate(0, ${height - margin.top - margin.bottom})`).attr('class', 'gender_xAxis')
             .call(xAxis);
-
+        svg.append('g').attr('transform', `translate(${margin.left}, 0)`).attr('class', 'line_group');
+        let lineGroup = d3.select('.line_group')
         function allGender() {
             let mData = [], fData = [];
             for(let age = 10; age < 80; age += 5){
@@ -351,15 +351,32 @@ function documentInit(boxId, mapJson, mapObj) {
                 .y(d => y(d.value))
                 .curve(d3.curveMonotoneX);
 
-            let m = svg.selectAll('.male').data([mData], d => d.age);
-            let f = svg.selectAll('.female').data([fData], d => d.age);
+            let m = lineGroup.selectAll('.male').data([mData], d => d.age);
+            let f = lineGroup.selectAll('.female').data([fData], d => d.age);
             
-            m.enter().append('path').attr('class', 'male')
-                .merge(m).transition().duration(500).attr('d', line).attr('fill', 'none').attr('stroke', 'steelblue')
+            m.enter().append('path').attr('class', 'male').merge(m).transition().duration(500)
+                .attr('d', line).attr('fill', 'none').attr('stroke', 'steelblue')
                 .attr('stroke-width', 3).attr('stroke-opacity', 0.8);
-            f.enter().append('path').attr('class', 'female')
-                .merge(f).transition().duration(500).attr('d', line).attr('fill', 'none').attr('stroke', 'tomato')
+            f.enter().append('path').attr('class', 'female').merge(f).transition().duration(500)
+                .attr('d', line).attr('fill', 'none').attr('stroke', 'tomato')
                 .attr('stroke-width', 3).attr('stroke-opacity', 0.8);
+
+            let mDot = lineGroup.selectAll('.mdot').data(mData);
+            let fDot = lineGroup.selectAll('.fdot').data(fData);
+
+            mDot.enter().append('circle').attr('class', 'mdot').merge(mDot).transition().duration(500)
+                .attr('cx', d => x(d.age)).attr('cy', d => y(d.value)).attr('r', 4)
+                .attr('fill', 'steelblue').attr('stroke', 'white').attr('stroke-width', 1.5)
+            mDot.on('mouseover', function(d){
+                document.querySelector('#chart_value').innerHTML = `${d.age}세 이상 ${d.age + 5}세 미만<br>
+남성 - ${mData[d.age/5-2]['value']} / 여성 - ${fData[d.age/5-2]['value']}`})
+            fDot.enter().append('circle').attr('class', 'fdot').merge(fDot).transition().duration(500)
+                .attr('cx', d => x(d.age)).attr('cy', d => y(d.value)).attr('r', 4)
+                .attr('fill', 'tomato').attr('stroke', 'white').attr('stroke-width', 1.5)
+            fDot.on('mouseover', function(d){
+                document.querySelector('#chart_value').innerHTML = `${d.age}세 이상 ${d.age + 5}세 미만<br>
+남성 - ${mData[d.age/5-2]['value']} / 여성 - ${fData[d.age/5-2]['value']}`
+            })
         }
     }
     {
@@ -395,8 +412,11 @@ function documentInit(boxId, mapJson, mapObj) {
                 .attr('x', d => x(d.time))
                 .attr('y', d => y(d.age))
                 .attr('width', 15)
-                .attr('height', 15);
-                // .on('mouseover');
+                .attr('height', 15)
+                .on('mouseover', function(d){
+                    document.querySelector('#chart_value').innerHTML = `${d.time}시의 ${d.age}세 이상 ${d.age + 5}세 미만<br>
+인구수 - ${d.value}`
+                });
 
             rects.transition().duration(500)
                 .attr('fill', d => ageColor(d.value));
