@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <base href="https://kolpi12.github.io/capstone/">
+    <base href="http://localhost:8000/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -19,7 +19,10 @@
             <div id="gu_map"></div>
             <div id="chart" class="clearfix">
                 <div id="label">
-                    <h3><span id="gu_nm"></span> <span id="dong_nm"></span></h3>
+                    유입지 : <h3><span id="gu_nm"></span> <span id="dong_nm"></span></h3>
+                    <div>기준일 : <input type="date" id="date" min="2019-08-01" max="2019-11-02" value="2019-11-01">
+                        <div id="dateError"></div>
+                    </div>
                     <div>기준 시각 : <span id="time"></span><br>
                     <input type="range" id="time_slider" min="0" max="23" value="12"></div>
                     <div>행정동 코드 : <h3 id="hj_cd"></h3></div>
@@ -40,11 +43,6 @@
                 <h3>유출 인구수 범례</h3>
                 <svg id="out_pop_legend"></svg>
             </div>
-        </div>
-        <div id="setting">
-            기준일 설정 : 
-            <input type="date" id="date" min="2019-08-01" max="2019-11-02" value="2019-11-01">
-            <div id="dateError"></div>
         </div>
     </div>
 </body>
